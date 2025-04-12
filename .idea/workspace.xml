@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="03468330-07c1-48c3-ad6e-a53898b8d91a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.github/workflows/main.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/castkit.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.rspec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.rubocop.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CHANGELOG.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CODE_OF_CONDUCT.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Gemfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/LICENSE.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Rakefile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bin/console" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bin/setup" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/castkit.gemspec" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/active_record.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/attribute.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/attribute_extensions/access.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/attribute_extensions/casting.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/attribute_extensions/error_handling.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/attribute_extensions/options.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/attribute_extensions/serialization.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/attribute_extensions/validation.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/castkit.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/configuration.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/data_object.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/data_object_extensions/attribute_types.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/data_object_extensions/attributes.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/data_object_extensions/config.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/data_object_extensions/deserialization.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/default_serializer.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/error.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/serialize.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/serializer.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/validator.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/validators.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/validators/numeric_validator.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/validators/string_validator.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/castkit/version.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sig/castkit.rbs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/attribute_extensions/access_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/attribute_extensions/casting_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/attribute_extensions/options_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/attribute_extensions/serialization_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/attribute_extensions/validation_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/attribute_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/data_object_extensions/attribute_types_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/data_object_extensions/attributes_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/data_object_extensions/config_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/data_object_extensions/deserialization_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/data_object_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/default_serializer_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/serializer_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/validator_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/validators/numeric_validator_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit/validators/string_validator_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/castkit_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/configuration_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/spec_helper.rb" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Ruby Module" />
+        <option value="Ruby Class" />
+        <option value="Ruby File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2vWke0SULZPHN747ZhcF49k6PLT" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "RSpec.All specs in spec: castkit.executor": "Run",
+    "RSpec.Castkit Castkit::DataObject with optional attributes resolves aliased keys.executor": "Run",
+    "RSpec.Castkit.executor": "Run",
+    "RSpec.Castkit::Attribute.executor": "Run",
+    "RSpec.Castkit::Attribute::Access.executor": "Run",
+    "RSpec.Castkit::AttributeExtensions::Access.executor": "Run",
+    "RSpec.Castkit::AttributeExtensions::Access.readwriteable?.executor": "Run",
+    "RSpec.Castkit::AttributeExtensions::Access.writeable?.executor": "Debug",
+    "RSpec.Castkit::AttributeExtensions::Casting #cast when type is a union raises if none match.executor": "Run",
+    "RSpec.Castkit::AttributeExtensions::Casting.executor": "Run",
+    "RSpec.Castkit::AttributeExtensions::Options#unwrapped? when unwrapped is true but not a DataObject.executor": "Run",
+    "RSpec.Castkit::AttributeExtensions::Options#unwrapped?.executor": "Run",
+    "RSpec.Castkit::AttributeExtensions::Options.executor": "Run",
+    "RSpec.Castkit::AttributeExtensions::Serialization.executor": "Run",
+    "RSpec.Castkit::AttributeExtensions::Validation.executor": "Run",
+    "RSpec.Castkit::Configuration.executor": "Run",
+    "RSpec.Castkit::DataObject.executor": "Run",
+    "RSpec.Castkit::DataObjectExtensions::AttributeTypes.executor": "Run",
+    "RSpec.Castkit::DataObjectExtensions::Attributes.executor": "Run",
+    "RSpec.Castkit::DataObjectExtensions::Config.executor": "Run",
+    "RSpec.Castkit::DataObjectExtensions::Deserialization.executor": "Run",
+    "RSpec.Castkit::DataObjectExtensions::Serialization#to_h when attribute is unwrapped flattens unwrapped keys into the top-level hash.executor": "Run",
+    "RSpec.Castkit::DataObjectExtensions::Serialization#to_h when attribute is unwrapped warns on key conflicts.executor": "Run",
+    "RSpec.Castkit::DataObjectExtensions::Serialization#to_h when ignore_nil is set omits nil values when ignore_nil is set on attribute.executor": "Run",
+    "RSpec.Castkit::DataObjectExtensions::Serialization#to_h when root is defined.executor": "Run",
+    "RSpec.Castkit::DefaultSerializer.executor": "Run",
+    "RSpec.Castkit::ErrorHandling.executor": "Run",
+    "RSpec.Castkit::Serializer.executor": "Run",
+    "RSpec.Castkit::Validator.executor": "Debug",
+    "RSpec.Castkit::Validators::NumericValidator.executor": "Run",
+    "RSpec.access_spec.executor": "Run",
+    "RSpec.attributes_spec.executor": "Run",
+    "RSpec.serialization_spec.executor": "Run",
+    "RSpec.validation_spec.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ruby.structure.view.model.defaults.configured": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/spec/castkit/attribute_extensions" />
+      <recent name="$PROJECT_DIR$/lib/castkit/attribute_extensions" />
+      <recent name="$PROJECT_DIR$/lib/castkit" />
+    </key>
+  </component>
+  <component name="RunManager" selected="RSpec.All specs in spec: castkit">
+    <configuration type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
+      <module name="castkit" />
+      <predefined_log_file enabled="true" id="RUBY_RSPEC" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
+      <envs>
+        <env name="JRUBY_OPTS" value="-X+O" />
+      </envs>
+      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" track_test_folders="true" runner="rcov" ENABLE_BRANCH_COVERAGE="true" ENABLE_FORKED_COVERAGE="true">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
+      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/castkit/attribute_extensions/error_handling_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATHS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="Castkit::ErrorHandling" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_EXAMPLE_MATCHES" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="LINE_NUMBER_EXAMPLE_IDS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_ARGS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_VERSION" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_CUSTOM_SPEC_RUNNER" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="FULL_BACKTRACE" VALUE="false" />
+      <method v="2" />
+    </configuration>
+    <configuration name="All specs in spec: castkit" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true">
+      <module name="castkit" />
+      <predefined_log_file enabled="true" id="RUBY_RSPEC" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
+      <envs>
+        <env name="JRUBY_OPTS" value="-X+O" />
+      </envs>
+      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" track_test_folders="true" runner="rcov" ENABLE_BRANCH_COVERAGE="true" ENABLE_FORKED_COVERAGE="true">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
+      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="$MODULE_DIR$/spec" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATHS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_EXAMPLE_MATCHES" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="LINE_NUMBER_EXAMPLE_IDS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="ALL_IN_FOLDER" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_ARGS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_VERSION" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_CUSTOM_SPEC_RUNNER" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="FULL_BACKTRACE" VALUE="false" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Castkit Castkit::DataObject with optional attributes resolves aliased keys" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
+      <module name="castkit" />
+      <predefined_log_file enabled="true" id="RUBY_RSPEC" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
+      <envs>
+        <env name="JRUBY_OPTS" value="-X+O" />
+      </envs>
+      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" track_test_folders="true" runner="rcov" ENABLE_BRANCH_COVERAGE="true" ENABLE_FORKED_COVERAGE="true">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
+      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/castkit_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATHS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="Castkit Castkit::DataObject with optional attributes resolves aliased keys" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_EXAMPLE_MATCHES" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="LINE_NUMBER_EXAMPLE_IDS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_ARGS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_VERSION" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_CUSTOM_SPEC_RUNNER" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="FULL_BACKTRACE" VALUE="false" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Castkit" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
+      <module name="castkit" />
+      <predefined_log_file enabled="true" id="RUBY_RSPEC" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
+      <envs>
+        <env name="JRUBY_OPTS" value="-X+O" />
+      </envs>
+      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" track_test_folders="true" runner="rcov" ENABLE_BRANCH_COVERAGE="true" ENABLE_FORKED_COVERAGE="true">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
+      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/castkit_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATHS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="Castkit" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_EXAMPLE_MATCHES" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="LINE_NUMBER_EXAMPLE_IDS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_ARGS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_VERSION" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_CUSTOM_SPEC_RUNNER" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="FULL_BACKTRACE" VALUE="false" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Castkit::Configuration" type="RSpecRunConfigurationType" factoryName="RSpec" temporary="true" nameIsGenerated="true">
+      <module name="castkit" />
+      <predefined_log_file enabled="true" id="RUBY_RSPEC" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
+      <envs>
+        <env name="JRUBY_OPTS" value="-X+O" />
+      </envs>
+      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" track_test_folders="true" runner="rcov" ENABLE_BRANCH_COVERAGE="true" ENABLE_FORKED_COVERAGE="true">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
+      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="$MODULE_DIR$/spec/configuration_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATHS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_RUNNER_PATH" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="**/*_spec.rb" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_EXAMPLE_NAME" VALUE="Castkit::Configuration" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_EXAMPLE_MATCHES" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="LINE_NUMBER_EXAMPLE_IDS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="TEST_SCRIPT" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPEC_ARGS" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_VERSION" VALUE="" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="USE_CUSTOM_SPEC_RUNNER" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
+      <RSPEC_RUN_CONFIG_SETTINGS_ID NAME="FULL_BACKTRACE" VALUE="false" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="RSpec.All specs in spec: castkit" />
+        <item itemvalue="RSpec.Castkit" />
+        <item itemvalue="RSpec.Castkit Castkit::DataObject with optional attributes resolves aliased keys" />
+        <item itemvalue="RSpec.Castkit::Configuration" />
+        <item itemvalue="RSpec.Castkit::ErrorHandling" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-RM-243.26053.19" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpringUtil" SPRING_PRE_LOADER_OPTION="true" RAKE_SPRING_PRE_LOADER_OPTION="true" RAILS_SPRING_PRE_LOADER_OPTION="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="03468330-07c1-48c3-ad6e-a53898b8d91a" name="Changes" comment="" />
+      <created>1744268309118</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1744268309118</updated>
+      <workItem from="1744268310398" duration="38854000" />
+      <workItem from="1744381791653" duration="35364000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/castkit@Castkit__DataObjectExtensions__Config.rcov" NAME="Castkit::DataObjectExtensions::Config Coverage Results" MODIFIED="1744394045519" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@All_specs_in_spec__castkit.rcov" NAME="All specs in spec: castkit Coverage Results" MODIFIED="1744425225784" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__AttributeExtensions__Options.rcov" NAME="Castkit::AttributeExtensions::Options Coverage Results" MODIFIED="1744384308797" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__Attribute.rcov" NAME="Castkit::Attribute Coverage Results" MODIFIED="1744420552310" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@attributes_spec.rcov" NAME="attributes_spec Coverage Results" MODIFIED="1744394763793" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@access_spec.rcov" NAME="access_spec Coverage Results" MODIFIED="1744380481315" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__AttributeExtensions__Casting.rcov" NAME="Castkit::AttributeExtensions::Casting Coverage Results" MODIFIED="1744386692963" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__Serializer.rcov" NAME="Castkit::Serializer Coverage Results" MODIFIED="1744420757482" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__Validator.rcov" NAME="Castkit::Validator Coverage Results" MODIFIED="1744420928550" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__Attribute__Access.rcov" NAME=" Coverage Results" MODIFIED="1744379447039" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__AttributeExtensions__Serialization.rcov" NAME="Castkit::AttributeExtensions::Serialization Coverage Results" MODIFIED="1744420536158" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__DataObjectExtensions__Serialization_to_h_when_attribute_is_unwrapped_warns_on_key_conflicts.rcov" NAME="Castkit::DataObjectExtensions::Serialization#to_h when attribute is unwrapped warns on key conflicts Coverage Results" MODIFIED="1744397751502" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__DataObjectExtensions__Serialization_to_h_when_ignore_nil_is_set_omits_nil_values_when_ignore_nil_is_set_on_attribute.rcov" NAME="Castkit::DataObjectExtensions::Serialization#to_h when ignore_nil is set omits nil values when ignore_nil is set on attribute Coverage Results" MODIFIED="1744397400993" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__AttributeExtensions__Validation.rcov" NAME="Castkit::AttributeExtensions::Validation Coverage Results" MODIFIED="1744387095002" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__Validators__NumericValidator.rcov" NAME="Castkit::Validators::NumericValidator Coverage Results" MODIFIED="1744393463319" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__AttributeExtensions__Access_writeable_.rcov" NAME="Castkit::AttributeExtensions::Access.writeable? Coverage Results" MODIFIED="1744381717425" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit.rcov" NAME="Castkit Coverage Results" MODIFIED="1744423895771" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__DataObjectExtensions__Serialization_to_h_when_root_is_defined.rcov" NAME="Castkit::DataObjectExtensions::Serialization#to_h when root is defined Coverage Results" MODIFIED="1744396537623" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__ErrorHandling.rcov" NAME="Castkit::ErrorHandling Coverage Results" MODIFIED="1744421235238" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__DataObjectExtensions__Deserialization.rcov" NAME="Castkit::DataObjectExtensions::Deserialization Coverage Results" MODIFIED="1744418811383" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__AttributeExtensions__Options_unwrapped_.rcov" NAME="Castkit::AttributeExtensions::Options#unwrapped? Coverage Results" MODIFIED="1744383712592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__DataObject.rcov" NAME="Castkit::DataObject Coverage Results" MODIFIED="1744420695104" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__DataObjectExtensions__Attributes.rcov" NAME="Castkit::DataObjectExtensions::Attributes Coverage Results" MODIFIED="1744394168402" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__DefaultSerializer.rcov" NAME="Castkit::DefaultSerializer Coverage Results" MODIFIED="1744420849452" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@validation_spec.rcov" NAME="validation_spec Coverage Results" MODIFIED="1744389680785" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__AttributeExtensions__Casting__cast_when_type_is_a_union_raises_if_none_match.rcov" NAME="Castkit::AttributeExtensions::Casting #cast when type is a union raises if none match Coverage Results" MODIFIED="1744385201216" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__DataObjectExtensions__Serialization_to_h_when_attribute_is_unwrapped_flattens_unwrapped_keys_into_the_top_level_hash.rcov" NAME="Castkit::DataObjectExtensions::Serialization#to_h when attribute is unwrapped flattens unwrapped keys into the top-level hash Coverage Results" MODIFIED="1744398583587" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit_Castkit__DataObject_with_optional_attributes_resolves_aliased_keys.rcov" NAME="Castkit Castkit::DataObject with optional attributes resolves aliased keys Coverage Results" MODIFIED="1744423243513" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__Configuration.rcov" NAME="Castkit::Configuration Coverage Results" MODIFIED="1744421565836" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__DataObjectExtensions__AttributeTypes.rcov" NAME="Castkit::DataObjectExtensions::AttributeTypes Coverage Results" MODIFIED="1744393847279" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__AttributeExtensions__Options_unwrapped__when_unwrapped_is_true_but_not_a_DataObject.rcov" NAME="Castkit::AttributeExtensions::Options#unwrapped? when unwrapped is true but not a DataObject Coverage Results" MODIFIED="1744384064338" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@serialization_spec.rcov" NAME="serialization_spec Coverage Results" MODIFIED="1744399377139" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__AttributeExtensions__Access.rcov" NAME="Castkit::AttributeExtensions::Access Coverage Results" MODIFIED="1744383443447" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+    <SUITE FILE_PATH="coverage/castkit@Castkit__AttributeExtensions__Access_readwriteable_.rcov" NAME="Castkit::AttributeExtensions::Access.readwriteable? Coverage Results" MODIFIED="1744394528422" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="castkit" />
+  </component>
+</project>

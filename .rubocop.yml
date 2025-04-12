@@ -1,0 +1,33 @@
+AllCops:
+  TargetRubyVersion: 2.7.0
+  NewCops: enable
+  SuggestExtensions: true
+
+Style/Documentation:
+  Exclude:
+    - lib/gaskit/**/*.rb
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  Enabled: true
+  EnforcedStyle: double_quotes
+
+Gemspec/DevelopmentDependencies:
+  EnforcedStyle: gemspec
+
+Layout/LineLength:
+  Max: 120
+
+Metrics/ClassLength:
+  Max: 200
+
+Metrics/BlockLength:
+  Exclude:
+    - gaskit.gemspec
+    - spec/**/*.rb
+
+Metrics/MethodLength:
+  Max: 20
