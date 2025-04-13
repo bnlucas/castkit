@@ -164,6 +164,24 @@ RSpec.describe Castkit::AttributeExtensions::Options do
     end
   end
 
+  describe "#dataobject_collection?" do
+    context "when type is an array and options[:of] is a DataObject class" do
+      let(:options) { { type: :array, of: dummy_dataobject_class } }
+
+      it "returns true" do
+        expect(instance.dataobject_collection?).to eq(true)
+      end
+    end
+
+    context "when type is an array and options[:of] is a plain Ruby object" do
+      let(:options) { { type: :array, of: String } }
+
+      it "returns false" do
+        expect(instance.dataobject_collection?).to eq(false)
+      end
+    end
+  end
+
   describe "#unwrapped?" do
     context "when dataobject? is true and unwrapped: true" do
       let(:options) { { type: dummy_dataobject_class, unwrapped: true } }

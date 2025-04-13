@@ -97,6 +97,13 @@ module Castkit
         Castkit.dataobject?(type)
       end
 
+      # Whether the attribute is a collection of Castkit::DataObjects.
+      #
+      # @return [Boolean]
+      def dataobject_collection?
+        type == :array && Castkit.dataobject?(options[:of])
+      end
+
       # Whether the attribute is considered composite (not exposed in serialized output).
       #
       # @return [Boolean]
