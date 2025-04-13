@@ -79,8 +79,21 @@ module Castkit
     # @raise [Castkit::AttributeError] if the type is not valid
     def normalize_type(type)
       return type.map { |t| normalize_type(t) } if type.is_a?(Array)
-      return type if type.is_a?(Class) && type < Castkit::DataObject
+      return type if Castkit.dataobject?(type)
 
+      process_type(type)
+    end
+
+    # Converts a single type value into a normalized internal representation.
+    #
+    # - Maps `TrueClass`/`FalseClass` to `:boolean`
+    # - Converts class names (e.g., `String`, `Integer`) to lowercase symbols
+    # - Accepts already-symbolized types (e.g., `:string`)
+    #
+    # @param type [Class, Symbol] the declared type to process
+    # @return [Symbol] the normalized type
+    # @raise [Castkit::AttributeError] if the type is not a recognized form
+    def process_type(type)
       case type
       when Class
         return :boolean if [TrueClass, FalseClass].include?(type)

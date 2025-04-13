@@ -164,42 +164,6 @@ RSpec.describe Castkit::AttributeExtensions::Options do
     end
   end
 
-  describe "#union_of_dataobjects?" do
-    context "when type is an array of DataObject classes" do
-      let(:options) { { type: [dummy_dataobject_class, dummy_dataobject_class] } }
-
-      it "returns true" do
-        expect(instance.union_of_dataobjects?).to eq(true)
-      end
-    end
-
-    context "when type includes non-DataObject types" do
-      let(:options) { { type: [dummy_dataobject_class, String] } }
-
-      it "returns false" do
-        expect(instance.union_of_dataobjects?).to eq(false)
-      end
-    end
-  end
-
-  describe "#array_of_dataobjects?" do
-    context "when type is :array and `of` is a DataObject" do
-      let(:options) { { type: :array, of: dummy_dataobject_class } }
-
-      it "returns true" do
-        expect(instance.array_of_dataobjects?).to eq(true)
-      end
-    end
-
-    context "when `of` is not a DataObject" do
-      let(:options) { { type: :array, of: String } }
-
-      it "returns false" do
-        expect(instance.array_of_dataobjects?).to eq(false)
-      end
-    end
-  end
-
   describe "#unwrapped?" do
     context "when dataobject? is true and unwrapped: true" do
       let(:options) { { type: dummy_dataobject_class, unwrapped: true } }

@@ -94,21 +94,7 @@ module Castkit
       #
       # @return [Boolean]
       def dataobject?
-        !!(type.is_a?(Class) && type < Castkit::DataObject)
-      end
-
-      # Whether the attribute is a union of multiple Castkit::DataObject types.
-      #
-      # @return [Boolean]
-      def union_of_dataobjects?
-        type.is_a?(Array) && type.all? { |t| !!(t.is_a?(Class) && t < Castkit::DataObject) }
-      end
-
-      # Whether the attribute is an array of Castkit::DataObject instances.
-      #
-      # @return [Boolean]
-      def array_of_dataobjects?
-        !!(type == :array && options[:of].is_a?(Class) && options[:of] < Castkit::DataObject)
+        Castkit.dataobject?(type)
       end
 
       # Whether the attribute is considered composite (not exposed in serialized output).

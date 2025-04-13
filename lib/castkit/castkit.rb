@@ -36,5 +36,9 @@ module Castkit
     def configuration
       @configuration ||= Configuration.new
     end
+
+    def dataobject?(obj)
+      obj.is_a?(Class) && obj.ancestors.include?(Castkit::DataObject)
+    end
   end
 end

@@ -6,6 +6,7 @@ require "castkit/default_serializer"
 RSpec.describe Castkit::DefaultSerializer do
   let(:attribute) do
     double("Attribute",
+           field: :name,
            skip_serialization?: false,
            ignore_nil?: false,
            ignore_blank?: false,
@@ -18,7 +19,7 @@ RSpec.describe Castkit::DefaultSerializer do
     Class.new do
       define_method(:name) { "Tester" }
 
-      define_singleton_method(:attributes) { { name: attr } }
+      define_singleton_method(:attributes) { { test: attr } }
       define_singleton_method(:root) { nil }
       define_singleton_method(:ignore_nil) { false }
       define_singleton_method(:ignore_blank) { false }

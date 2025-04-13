@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "date"
 require_relative "../data_object"
 require_relative "error_handling"
 
@@ -10,6 +11,14 @@ module Castkit
     # Supports primitive types, arrays, nested Castkit::DataObject types, and union types.
     module Casting
       include Castkit::AttributeExtensions::ErrorHandling
+
+      PRIMITIVE_CASTERS = {
+        integer: lambda(&:to_i),
+        float: lambda(&:to_f),
+        string: lambda(&:to_s),
+        hash: ->(v) { v },
+        array: ->(v) { Array(v) }
+      }.freeze
 
       private
 
@@ -23,6 +32,22 @@ module Castkit
         value = default if value.nil?
         return if value.nil? && optional?
 
+        cast_value(value)
+      end
+
+      # Delegates casting logic based on the attribute's type.
+      #
+      # This method is invoked internally by `#cast` after nil handling and default fallback.
+      #
+      # - For union types (`Array` of types), attempts each in order.
+      # - For array types, maps over elements with `#cast_element`.
+      # - For nested data objects, delegates to `.cast`.
+      # - For primitive types, uses `#cast_primitive`.
+      #
+      # @param value [Object] the raw input value to cast
+      # @return [Object, nil] the cast value
+      # @raise [Castkit::AttributeError] if casting fails for all union types or invalid primitives
+      def cast_value(value)
         if type.is_a?(Array)
           try_union_cast(value)
         elsif type == :array
@@ -54,14 +79,12 @@ module Castkit
       # Tries to cast a value to a specific type.
       #
       # @param value [Object]
-      # @param t [Symbol, Class] the type to try
+      # @param type [Symbol, Class] the type to try
       # @return [Object, nil]
-      def try_cast_type(value, t)
-        if !!(t.is_a?(Class) && t < Castkit::DataObject)
-          t.cast(value)
-        else
-          cast_primitive(value, type: t)
-        end
+      def try_cast_type(value, type)
+        return type.cast(value) if Castkit.dataobject?(type)
+
+        cast_primitive(value, type: type)
       end
 
       # Casts an element of an array attribute.
@@ -69,7 +92,7 @@ module Castkit
       # @param value [Object]
       # @return [Object, nil]
       def cast_element(value)
-        if options[:of].is_a?(Class) && options[:of] < Castkit::DataObject
+        if Castkit.dataobject?(options[:of])
           options[:of].cast(value)
         else
           validate_element_type!(value)
@@ -84,26 +107,13 @@ module Castkit
       # @return [Object, nil]
       # @raise [Castkit::AttributeError]
       def cast_primitive(value, type: self.type)
-        case type
-        when :boolean
-          cast_boolean(value)
-        when :integer
-          value.to_i
-        when :float
-          value.to_f
-        when :string
-          value.to_s
-        when :hash
-          value
-        when :array
-          Array(value)
-        when :date
-          Date.parse(value.to_s)
-        when :datetime
-          DateTime.parse(value.to_s)
-        else
+        return cast_boolean(value) if type == :boolean
+        return Date.parse(value.to_s) if type == :date
+        return DateTime.parse(value.to_s) if type == :datetime
+
+        PRIMITIVE_CASTERS.fetch(type) do
           handle_error(:primitive, type: type)
-        end
+        end.call(value)
       end
 
       # Casts a value to boolean.

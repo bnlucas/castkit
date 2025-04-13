@@ -2,7 +2,6 @@
 
 require_relative "castkit/version"
 require_relative "castkit/data_object"
-require_relative "castkit/serialize"
 
 # Castkit is a lightweight, type-safe data object system for Ruby.
 #

@@ -6,6 +6,12 @@ require "castkit/attribute_extensions/options"
 require "castkit/attribute_extensions/casting"
 require "castkit/attribute_extensions/serialization"
 
+class HashableThing
+  def to_h(*)
+    { key: "val" }
+  end
+end
+
 RSpec.describe Castkit::AttributeExtensions::Serialization do
   let(:dummy_class) do
     Class.new do
@@ -113,12 +119,6 @@ RSpec.describe Castkit::AttributeExtensions::Serialization do
     end
 
     it "calls to_h if value is hashable" do
-      class HashableThing
-        def to_h(*)
-          { key: "val" }
-        end
-      end
-
       instance = dummy_class.new(:foo, :object)
       value = HashableThing.new
 

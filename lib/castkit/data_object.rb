@@ -125,11 +125,22 @@ module Castkit
       unknown_keys = data.keys.map(&:to_sym) - valid_keys
       return if unknown_keys.empty?
 
-      if self.class.strict
-        raise Castkit::DataObjectError, "Unknown attribute(s): #{unknown_keys.join(", ")}"
-      elsif self.class.warn_on_unknown
-        warn "⚠️  [Castkit] Unknown attribute(s) ignored: #{unknown_keys.join(", ")}"
-      end
+      handle_unknown_keys!(unknown_keys)
+    end
+
+    # Handles unknown keys found during initialization.
+    #
+    # Behavior depends on the class-level configuration:
+    # - Raises a `Castkit::DataObjectError` if strict mode is enabled.
+    # - Logs a warning if `warn_on_unknown` is enabled.
+    #
+    # @param unknown_keys [Array<Symbol>] list of unknown keys not declared as attributes or aliases
+    # @raise [Castkit::DataObjectError] if strict mode is active
+    # @return [void]
+    def handle_unknown_keys!(unknown_keys)
+      raise Castkit::DataObjectError, "Unknown attribute(s): #{unknown_keys.join(", ")}" if self.class.strict
+
+      warn "⚠️  [Castkit] Unknown attribute(s) ignored: #{unknown_keys.join(", ")}" if self.class.warn_on_unknown
     end
 
     # Returns the serializer instance or default for this object.
