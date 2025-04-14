@@ -75,7 +75,7 @@ module Castkit
         message = message_fn.call(self, **kwargs)
         raise error_class.new(message, context: context) if Castkit.configuration.public_send(config_key)
 
-        warn "[Castkit] #{message}"
+        Castkit.warning "[Castkit] #{message}"
         nil
       end
     end

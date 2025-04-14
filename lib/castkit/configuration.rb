@@ -47,6 +47,10 @@ module Castkit
     # @return [Boolean]
     attr_accessor :enforce_array_options
 
+    # Whether to generating warnings or not, defaults to `true`.
+    # @return [Boolean]
+    attr_accessor :enable_warnings
+
     # Initializes the configuration with default validators and enforcement settings.
     #
     # @return [void]
@@ -59,6 +63,7 @@ module Castkit
       @enforce_attribute_access = true
       @enforce_unwrapped_prefix = true
       @enforce_array_options = true
+      @enable_warnings = true
     end
 
     # Registers a custom validator for a given type.

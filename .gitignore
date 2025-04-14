@@ -67,3 +67,5 @@ Thumbs.db
 
 # Ignore the local config file for Overcommit.
 .overcommit.yml
+
+*.gem

@@ -21,8 +21,11 @@ RSpec.describe Castkit::DefaultSerializer do
 
       define_singleton_method(:attributes) { { test: attr } }
       define_singleton_method(:root) { nil }
+      define_singleton_method(:allow_unknown) { false }
       define_singleton_method(:ignore_nil) { false }
       define_singleton_method(:ignore_blank) { false }
+
+      define_method(:unknown_attributes) { {} }
     end
   end
 
@@ -38,6 +41,7 @@ RSpec.describe Castkit::DefaultSerializer do
   describe "#call" do
     it "wraps in root if root is set" do
       allow(klass).to receive(:root).and_return("user")
+
       serializer = described_class.new(obj)
       expect(serializer.call).to eq({ user: { name: "Tester" } })
     end
@@ -45,6 +49,14 @@ RSpec.describe Castkit::DefaultSerializer do
     it "does not wrap if root is nil" do
       serializer = described_class.new(obj)
       expect(serializer.call).to eq({ name: "Tester" })
+    end
+
+    it "includes unknown attributes when `allow_unknown` is true and `unknown_attributes` is populated" do
+      allow(klass).to receive(:allow_unknown).and_return(true)
+      allow(obj).to receive(:unknown_attributes).and_return({ unknown: "key" })
+
+      serializer = described_class.new(obj)
+      expect(serializer.call).to eq({ name: "Tester", unknown: "key" })
     end
   end
 

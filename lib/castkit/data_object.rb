@@ -72,15 +72,26 @@ module Castkit
       end
     end
 
+    # @return [Hash{Symbol => Object}] The raw data provided during instantiation.
+    attr_reader :__raw
+
+    # @return [Hash{Symbol => Object}] Undefined attributes provided during instantiation.
+    attr_reader :unknown_attributes
+
     # Initializes the DTO from a hash of attributes.
     #
     # @param fields [Hash] raw input hash
     # @raise [Castkit::DataObjectError] if strict mode is enabled and unknown keys are present
     def initialize(fields = {})
+      @__raw = fields
+
       root = self.class.root
       fields = fields[root] if root && fields.key?(root)
       fields = unwrap_prefixed_fields!(fields)
 
+      @unknown_attributes = fields.reject { |key, _| self.class.attributes.key?(key.to_sym) }
+
+      validate_access_config!
       validate_keys!(fields)
       deserialize_attributes!(fields)
     end
@@ -128,19 +139,32 @@ module Castkit
       handle_unknown_keys!(unknown_keys)
     end
 
+    # Validates the `strict` and `allow_unknown` config flags and generates a warning if they are conflicting.
+    # - If strict == true, allow_unknown cannot be true.
+    # - If strict == false, allow_unknown can be true | false.
+    #
+    # @return [void]
+    def validate_access_config!
+      return unless self.class.strict && self.class.allow_unknown
+
+      Castkit.warning "⚠️ [Castkit] Both `strict` and `allow_unknown` are enabled, which can lead to " \
+                      "conflicting behavior. `strict` is being disabled to respect `allow_unknown`."
+    end
+
     # Handles unknown keys found during initialization.
     #
     # Behavior depends on the class-level configuration:
     # - Raises a `Castkit::DataObjectError` if strict mode is enabled.
-    # - Logs a warning if `warn_on_unknown` is enabled.
+    # - Logs a warning if `warn_on_unknown` is enabled and `allow_unknown` is false.
     #
-    # @param unknown_keys [Array<Symbol>] list of unknown keys not declared as attributes or aliases
-    # @raise [Castkit::DataObjectError] if strict mode is active
+    # @param unknown_keys [Array<Symbol>] List of unknown keys not declared as attributes or aliases.
+    # @raise [Castkit::DataObjectError] If `strict` mode is enabled and unknown keys are found.
     # @return [void]
     def handle_unknown_keys!(unknown_keys)
-      raise Castkit::DataObjectError, "Unknown attribute(s): #{unknown_keys.join(", ")}" if self.class.strict
+      raise Castkit::DataObjectError, "Unknown attribute(s): #{unknown_keys.join(", ")}" if strict?
+      return unless self.class.warn_on_unknown
 
-      warn "⚠️  [Castkit] Unknown attribute(s) ignored: #{unknown_keys.join(", ")}" if self.class.warn_on_unknown
+      Castkit.warning "⚠️  [Castkit] Unknown attribute(s) ignored: #{unknown_keys.join(", ")}"
     end
 
     # Returns the serializer instance or default for this object.
@@ -148,6 +172,13 @@ module Castkit
     # @return [Class<Castkit::Serializer>]
     def serializer
       @serializer ||= self.class.serializer || Castkit::DefaultSerializer
+    end
+
+    # Returns false if self.class.allow_unknown == true, otherwise the value of self.class.strict.
+    #
+    # @return [Boolean]
+    def strict?
+      self.class.allow_unknown ? false : !!self.class.strict
     end
   end
 end

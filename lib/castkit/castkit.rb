@@ -37,6 +37,18 @@ module Castkit
       @configuration ||= Configuration.new
     end
 
+    # Generates a warning message if configuration.enable_warnings == true.
+    #
+    # @param message [String] The warning message
+    # @return [void]
+    def warning(message)
+      warn message if configuration.enable_warnings
+    end
+
+    # Determine if an object is a subclass of Castkit::DataObject.
+    #
+    # @param obj [Object] The object to check
+    # @return [Boolean]
     def dataobject?(obj)
       obj.is_a?(Class) && obj.ancestors.include?(Castkit::DataObject)
     end

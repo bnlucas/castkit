@@ -39,7 +39,7 @@ RSpec.describe Castkit::AttributeExtensions::Validation do
   let(:options) { {} }
 
   before do
-    allow(instance).to receive(:warn)
+    allow(Castkit).to receive(:warning)
   end
 
   describe "#validate!" do
@@ -70,7 +70,7 @@ RSpec.describe Castkit::AttributeExtensions::Validation do
         before { Castkit.configuration.enforce_attribute_access = false }
 
         it "warns instead of raising" do
-          expect(instance).to receive(:warn).with(/invalid access mode/)
+          expect(Castkit).to receive(:warning).with(/invalid access mode/)
           expect { instance.send(:validate!) }.not_to raise_error
         end
       end
@@ -101,7 +101,7 @@ RSpec.describe Castkit::AttributeExtensions::Validation do
         before { Castkit.configuration.enforce_unwrapped_prefix = false }
 
         it "warns instead of raising" do
-          expect(instance).to receive(:warn).with(/prefix can only be used/)
+          expect(Castkit).to receive(:warning).with(/prefix can only be used/)
           expect { instance.send(:validate!) }.not_to raise_error
         end
       end
@@ -124,7 +124,7 @@ RSpec.describe Castkit::AttributeExtensions::Validation do
         before { Castkit.configuration.enforce_array_options = false }
 
         it "warns instead of raising" do
-          expect(instance).to receive(:warn).with(/must specify `of:`/)
+          expect(Castkit).to receive(:warning).with(/must specify `of:`/)
           expect { instance.send(:validate!) }.not_to raise_error
         end
       end

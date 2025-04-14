@@ -70,7 +70,15 @@ module Castkit
         # @param value [Boolean, nil]
         # @return [Boolean, nil]
         def warn_on_unknown(value = nil)
-          value.nil? ? @warn_unknown_keys : (@warn_unknown_keys = value)
+          value.nil? ? @warn_on_unknown : (@warn_on_unknown = value)
+        end
+
+        # Sets or retrieves whether to allow unknown keys when they are encountered.
+        #
+        # @param value [Boolean, nil]
+        # @return [Boolean, nil]
+        def allow_unknown(value = nil)
+          value.nil? ? @allow_unknown : (@allow_unknown = value)
         end
 
         # Returns a relaxed version of the current class with strict mode off.

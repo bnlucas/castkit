@@ -10,9 +10,9 @@ module Castkit
       #
       # If the value is a Castkit::DataObject, a custom serializer is used if configured.
       #
-      # @param value [Object] the value to serialize
+      # @param value [Object, nil] the value to serialize
       # @param visited [Set, nil] used for circular reference detection
-      # @return [Object] the serialized value
+      # @return [Object, nil] the serialized value
       def dump(value, visited: nil)
         return value if value.nil?
 
@@ -48,9 +48,9 @@ module Castkit
       # - Uses a serializer if the value is a Castkit::DataObject.
       # - Converts `to_h` if the value is hash-like.
       #
-      # @param value [Object] the element to dump
+      # @param value [Object, nil] the element to dump
       # @param visited [Set, nil]
-      # @return [Object]
+      # @return [Object, nil]
       def dump_element(value, visited: nil)
         return value if value.nil? || primitive?(value)
 
@@ -66,7 +66,7 @@ module Castkit
 
       # Checks whether a value is a hashable object suitable for `to_h` dumping.
       #
-      # @param value [Object]
+      # @param value [Object, nil]
       # @return [Boolean]
       def hashable?(value)
         value.respond_to?(:to_h) && !primitive?(value) && !value.is_a?(Castkit::Attribute)
@@ -74,7 +74,7 @@ module Castkit
 
       # Determines if a value is a primitive type.
       #
-      # @param value [Object]
+      # @param value [Object, nil]
       # @return [Boolean]
       def primitive?(value)
         case value

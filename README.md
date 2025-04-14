@@ -191,5 +191,5 @@ MIT. See [LICENSE](LICENSE).
 
 ## 🙏 Credits
 
-Created with ❤️ by [Nathan Lucas](https://github.com/you)  
+Created with ❤️ by [Nathan Lucas](https://github.com/bnlucas)
 Inspired by Java DTOs, dry-rb, and the need for clean, reliable data structures in APIs.
