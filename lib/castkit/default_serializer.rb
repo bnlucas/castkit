@@ -46,7 +46,7 @@ module Castkit
       @options = {
         root: raw.class.root,
         ignore_nil: raw.class.ignore_nil || false,
-        allow_unknown: raw.class.allow_unknown || false,
+        allow_unknown: raw.class.allow_unknown || false
       }
     end
 
