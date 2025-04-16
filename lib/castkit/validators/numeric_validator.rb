@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative "../validator"
+require_relative "base_validator"
 
 module Castkit
   module Validators
     # Validates that a numeric value falls within the allowed range.
     #
     # Supports `:min` and `:max` options to enforce bounds.
-    class NumericValidator < Castkit::Validator
+    class NumericValidator < Castkit::Validators::BaseValidator
       # Validates the numeric value.
       #
       # @param value [Numeric] the value to validate

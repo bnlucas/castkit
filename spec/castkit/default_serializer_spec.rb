@@ -7,9 +7,12 @@ RSpec.describe Castkit::DefaultSerializer do
   let(:attribute) do
     double("Attribute",
            field: :name,
+           type: :string,
            skip_serialization?: false,
            ignore_nil?: false,
            ignore_blank?: false,
+           dataobject?: false,
+           dataobject_collection?: false,
            key_path: [:name],
            dump: "Tester")
   end
@@ -99,7 +102,7 @@ RSpec.describe Castkit::DefaultSerializer do
     it "sets deeply nested value from key path" do
       attribute = double("Attribute", key_path: %i[a b c])
       hash = {}
-      described_class.new(obj).send(:assign_attribute_key!, hash, attribute, 42)
+      described_class.new(obj).send(:assign_attribute_key!, attribute, 42, hash)
       expect(hash).to eq({ a: { b: { c: 42 } } })
     end
   end

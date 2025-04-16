@@ -1,23 +1,18 @@
 # frozen_string_literal: true
 
 require_relative "error"
-require_relative "data_object"
-require_relative "attribute_extensions/options"
-require_relative "attribute_extensions/casting"
-require_relative "attribute_extensions/access"
-require_relative "attribute_extensions/validation"
-require_relative "attribute_extensions/serialization"
+require_relative "ext/attribute/options"
+require_relative "ext/attribute/access"
+require_relative "ext/attribute/validation"
 
 module Castkit
   # Represents a typed attribute on a Castkit::DataObject.
   #
   # Provides casting, validation, access control, and serialization behavior.
   class Attribute
-    include Castkit::AttributeExtensions::Options
-    include Castkit::AttributeExtensions::Casting
-    include Castkit::AttributeExtensions::Access
-    include Castkit::AttributeExtensions::Validation
-    include Castkit::AttributeExtensions::Serialization
+    include Castkit::Ext::Attribute::Options
+    include Castkit::Ext::Attribute::Access
+    include Castkit::Ext::Attribute::Validation
 
     # @return [Symbol] the attribute name
     attr_reader :field
@@ -104,19 +99,6 @@ module Castkit
       else
         raise_error!("Unknown type: #{type.inspect}")
       end
-    end
-
-    # Validates the final value against a validator if required.
-    #
-    # @param value [Object]
-    # @param context [Symbol, String]
-    # @return [void]
-    def validate_value!(value, context:)
-      return if value.nil? && optional?
-      return if type.is_a?(Array) || dataobject?
-
-      validator = options[:validator] || Castkit.configuration.validator_for(type)
-      validator&.call(value, options: options, context: context)
     end
 
     # Raises a Castkit::AttributeError with optional context.

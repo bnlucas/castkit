@@ -53,13 +53,23 @@ RSpec.describe Castkit do
       it "raises if a required attribute is missing" do
         expect do
           klass.new(age: 21)
-        end.to raise_error(Castkit::AttributeError, /name.*required/i)
+        rescue Castkit::ContractError => e
+          expect(e.errors).to include(name: "name is required")
+          raise e
+        end.to raise_error(Castkit::ContractError)
       end
 
       it "raises if all required attributes are missing" do
         expect do
           klass.new({})
-        end.to raise_error(Castkit::AttributeError)
+        rescue Castkit::ContractError => e
+          expect(e.errors).to include(
+            name: "name is required",
+            age: "age is required"
+          )
+
+          raise e
+        end.to raise_error(Castkit::ContractError)
       end
 
       it "initializes when all required attributes are present" do
@@ -123,7 +133,7 @@ RSpec.describe Castkit do
         attribute :data, :hash, required: false
       end)
 
-      Castkit.configuration.enforce_array_of_type = true
+      Castkit.configuration.enforce_typing = true
     end
 
     it "instantiates with flat fields" do
@@ -164,13 +174,19 @@ RSpec.describe Castkit do
     it "raises for missing required fields" do
       expect do
         User.new(email: "no_id@example.com")
-      end.to raise_error(Castkit::AttributeError, /id is required/)
+      rescue Castkit::ContractError => e
+        expect(e.errors).to include(id: "id is required")
+        raise e
+      end.to raise_error(Castkit::ContractError)
     end
 
     it "raises on incorrect types in array" do
       expect do
         User.new(id: "ok", email: "y", tags: [true])
-      end.to raise_error(Castkit::AttributeError)
+      rescue Castkit::ContractError => e
+        expect(e.errors).to include(tags: { 0 => "tags[0] must be a string" })
+        raise e
+      end.to raise_error(Castkit::ContractError)
     end
 
     it "serializes cleanly to JSON" do

@@ -21,6 +21,37 @@ RSpec.describe Castkit::DataObject do
     allow(Castkit).to receive(:warning)
   end
 
+  describe ".contract" do
+    let(:klass) do
+      Class.new(described_class) do
+        string :id
+        string :email, required: false
+      end
+    end
+
+    it "builds a contract with the class name as the default" do
+      contract = klass.contract
+
+      expect(contract.attributes.keys).to contain_exactly(:id, :email)
+      expect(contract.attributes[:id].required?).to eq(true)
+      expect(contract.attributes[:email].required?).to eq(false)
+    end
+
+    it "returns a contract that validates like the original DataObject" do
+      contract = klass.contract
+
+      expect do
+        contract.validate!(id: 123)
+      rescue Castkit::ContractError => e
+        expect(e.errors).to include(id: "id must be a string")
+        raise e
+      end.to raise_error(Castkit::ContractError)
+
+      result = contract.validate(id: "abc")
+      expect(result.success?).to be(true)
+    end
+  end
+
   describe ".cast" do
     it "returns the object if it's already an instance" do
       instance = subclass.new(valid_input)
@@ -76,7 +107,7 @@ RSpec.describe Castkit::DataObject do
       subclass.strict true
       expect do
         subclass.new(valid_input.merge(extra: 1))
-      end.to raise_error(Castkit::DataObjectError, /Unknown attribute/)
+      end.to raise_error(Castkit::ContractError, /Unknown attribute/)
     end
 
     it "raises on unknown keys in strict mode when allow_unknown is also false" do
@@ -85,7 +116,7 @@ RSpec.describe Castkit::DataObject do
 
       expect do
         subclass.new(valid_input.merge(extra: 1))
-      end.to raise_error(Castkit::DataObjectError, /Unknown attribute/)
+      end.to raise_error(Castkit::ContractError, /Unknown attribute/)
     end
 
     it "warns on unknown keys in warn mode" do

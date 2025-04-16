@@ -4,10 +4,14 @@ require "json"
 require_relative "error"
 require_relative "attribute"
 require_relative "default_serializer"
-require_relative "data_object_extensions/config"
-require_relative "data_object_extensions/attributes"
-require_relative "data_object_extensions/attribute_types"
-require_relative "data_object_extensions/deserialization"
+require_relative "contract/validator"
+require_relative "core/config"
+require_relative "core/attributes"
+require_relative "core/attribute_types"
+require_relative "core/registerable"
+require_relative "ext/data_object/contract"
+require_relative "ext/data_object/deserialization"
+require_relative "ext/data_object/serialization"
 
 module Castkit
   # Base class for defining declarative, typed data transfer objects (DTOs).
@@ -25,13 +29,31 @@ module Castkit
   #   user = UserDto.new(name: "Alice", age: 30)
   #   user.to_json #=> '{"name":"Alice","age":30}'
   class DataObject
-    extend Castkit::DataObjectExtensions::Attributes
-    extend Castkit::DataObjectExtensions::AttributeTypes
+    extend Castkit::Core::Config
+    extend Castkit::Core::Attributes
+    extend Castkit::Core::AttributeTypes
+    extend Castkit::Core::Registerable
+    extend Castkit::Ext::DataObject::Contract
 
-    include Castkit::DataObjectExtensions::Config
-    include Castkit::DataObjectExtensions::Deserialization
+    include Castkit::Ext::DataObject::Serialization
+    include Castkit::Ext::DataObject::Deserialization
 
     class << self
+      # Registers the current class under `Castkit::DataObjects`.
+      #
+      # @param as [String, Symbol, nil] The constant name to use (PascalCase). Defaults to class name or "Anonymous".
+      # @return [Class] the registered dataobject class
+      def register!(as: nil)
+        super(namespace: :dataobjects, as: as)
+      end
+
+      def build(&block)
+        klass = Class.new(self)
+        klass.class_eval(&block) if block_given?
+
+        klass
+      end
+
       # Gets or sets the serializer class to use for instances of this object.
       #
       # @param value [Class<Castkit::Serializer>, nil]
@@ -80,20 +102,16 @@ module Castkit
 
     # Initializes the DTO from a hash of attributes.
     #
-    # @param fields [Hash] raw input hash
+    # @param data [Hash] raw input hash
     # @raise [Castkit::DataObjectError] if strict mode is enabled and unknown keys are present
-    def initialize(fields = {})
-      @__raw = fields
+    def initialize(data = {})
+      @__raw = data.dup.freeze
+      data = unwrap_root(data)
 
-      root = self.class.root
-      fields = fields[root] if root && fields.key?(root)
-      fields = unwrap_prefixed_fields!(fields)
+      @unknown_attributes = data.reject { |key, _| self.class.attributes.key?(key.to_sym) }.freeze
 
-      @unknown_attributes = fields.reject { |key, _| self.class.attributes.key?(key.to_sym) }
-
-      validate_access_config!
-      validate_keys!(fields)
-      deserialize_attributes!(fields)
+      validate_data!(data)
+      deserialize_attributes!(data)
     end
 
     # Serializes the DTO to a Ruby hash.
@@ -101,7 +119,6 @@ module Castkit
     # @param visited [Set, nil] used to track circular references
     # @return [Hash]
     def to_hash(visited: nil)
-      serializer = self.class.serializer || Castkit::DefaultSerializer
       serializer.call(self, visited: visited)
     end
 
@@ -123,48 +140,16 @@ module Castkit
 
     private
 
-    # Validates that the input only contains known keys unless configured otherwise.
+    # Helper method to call Castkit::Contract::Validator on the provided input data.
     #
     # @param data [Hash]
-    # @raise [Castkit::DataObjectError] in strict mode if unknown keys are present
-    # @return [void]
-    def validate_keys!(data)
-      valid_keys = self.class.attributes.flat_map do |_, attr|
-        [attr.key] + attr.options[:aliases]
-      end.map(&:to_sym).uniq
-
-      unknown_keys = data.keys.map(&:to_sym) - valid_keys
-      return if unknown_keys.empty?
-
-      handle_unknown_keys!(unknown_keys)
-    end
-
-    # Validates the `strict` and `allow_unknown` config flags and generates a warning if they are conflicting.
-    # - If strict == true, allow_unknown cannot be true.
-    # - If strict == false, allow_unknown can be true | false.
-    #
-    # @return [void]
-    def validate_access_config!
-      return unless self.class.strict && self.class.allow_unknown
-
-      Castkit.warning "⚠️ [Castkit] Both `strict` and `allow_unknown` are enabled, which can lead to " \
-                      "conflicting behavior. `strict` is being disabled to respect `allow_unknown`."
-    end
-
-    # Handles unknown keys found during initialization.
-    #
-    # Behavior depends on the class-level configuration:
-    # - Raises a `Castkit::DataObjectError` if strict mode is enabled.
-    # - Logs a warning if `warn_on_unknown` is enabled and `allow_unknown` is false.
-    #
-    # @param unknown_keys [Array<Symbol>] List of unknown keys not declared as attributes or aliases.
-    # @raise [Castkit::DataObjectError] If `strict` mode is enabled and unknown keys are found.
-    # @return [void]
-    def handle_unknown_keys!(unknown_keys)
-      raise Castkit::DataObjectError, "Unknown attribute(s): #{unknown_keys.join(", ")}" if strict?
-      return unless self.class.warn_on_unknown
-
-      Castkit.warning "⚠️  [Castkit] Unknown attribute(s) ignored: #{unknown_keys.join(", ")}"
+    # @raise [Castkit::ContractError]
+    def validate_data!(data)
+      Castkit::Contract::Validator.call!(
+        self.class.attributes.values,
+        data,
+        **self.class.validation_rules
+      )
     end
 
     # Returns the serializer instance or default for this object.

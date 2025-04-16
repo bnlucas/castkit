@@ -10,65 +10,58 @@ RSpec.describe Castkit::Configuration do
 
   describe "default enforcement flags" do
     it "enables all enforcement flags by default" do
-      expect(config.enforce_array_of_type).to be true
-      expect(config.enforce_known_primitive_type).to be true
-      expect(config.enforce_boolean_casting).to be true
-      expect(config.enforce_union_match).to be true
+      expect(config.enforce_typing).to be true
       expect(config.enforce_attribute_access).to be true
       expect(config.enforce_unwrapped_prefix).to be true
       expect(config.enforce_array_options).to be true
     end
   end
 
-  describe "#validator_for" do
-    it "returns built-in validators for known types" do
-      expect(config.validator_for(:string)).to eq(Castkit::Validators::StringValidator)
-      expect(config.validator_for(:integer)).to eq(Castkit::Validators::NumericValidator)
-      expect(config.validator_for(:float)).to eq(Castkit::Validators::NumericValidator)
+  describe "#type_for" do
+    it "returns built-in definitions for known types" do
+      expect(config.fetch_type(:string)).to be_a(Castkit::Types::String)
+      expect(config.fetch_type(:integer)).to be_a(Castkit::Types::Integer)
+      expect(config.fetch_type(:float)).to be_a(Castkit::Types::Float)
     end
   end
 
-  describe "#register_validator" do
-    let(:mock_validator) do
-      Class.new do
-        def self.call(_value, _options:, _context:)
-          true
-        end
-      end
-    end
+  describe "#register_type" do
+    let(:mock_definition) { Class.new(Castkit::Types::Generic) }
 
     it "registers a new validator for a type" do
-      config.register_validator(:custom, mock_validator)
-      expect(config.validator_for(:custom)).to eq(mock_validator)
+      config.register_type(:custom, mock_definition)
+      expect(config.fetch_type(:custom)).to be_a(mock_definition)
     end
 
     it "does not override existing validator by default" do
-      original = config.validator_for(:string)
-      config.register_validator(:string, mock_validator)
-      expect(config.validator_for(:string)).to eq(original)
+      original = config.fetch_type(:string)
+      config.register_type(:string, mock_definition)
+      expect(config.fetch_type(:string)).to eq(original)
     end
 
-    it "overrides existing validator if override: true" do
-      config.register_validator(:string, mock_validator, override: true)
-      expect(config.validator_for(:string)).to eq(mock_validator)
+    it "overrides existing definition if override: true" do
+      config.register_type(:string, mock_definition, override: true)
+      expect(config.fetch_type(:string)).to be_a(mock_definition)
     end
 
-    it "raises if validator does not respond to `.call`" do
+    it "raises if definition is not a subclass of Castkit::Types::Generic" do
       invalid = Class.new
 
       expect do
-        config.register_validator(:bad, invalid)
-      end.to raise_error(Castkit::Error, /must respond to `.call/)
+        config.register_type(:bad, invalid)
+      end.to raise_error(Castkit::Error, /Expected subclass.*bad/)
     end
   end
 
-  describe "#reset_validators!" do
-    it "resets to default validators" do
-      config.register_validator(:string, ->(*) {}, override: true)
-      expect(config.validator_for(:string)).not_to eq(Castkit::Validators::StringValidator)
+  describe "#reset_typess!" do
+    let(:mock_definition) { Class.new(Castkit::Types::Generic) }
 
-      config.reset_validators!
-      expect(config.validator_for(:string)).to eq(Castkit::Validators::StringValidator)
+    it "resets to default types" do
+      config.register_type(:string, mock_definition, override: true)
+      expect(config.fetch_type(:string)).not_to be_a(Castkit::Types::String)
+
+      config.reset_types!
+      expect(config.fetch_type(:string)).to be_a(Castkit::Types::String)
     end
   end
 end

@@ -18,7 +18,7 @@ RSpec.describe Castkit::Validators::StringValidator do
         it "raises if value is not a String" do
           expect do
             validator.call(123, options: {}, context: :name)
-          end.to raise_error(Castkit::AttributeError, /name must be a String/)
+          end.to raise_error(Castkit::AttributeError, /name must be a string/)
         end
       end
     end

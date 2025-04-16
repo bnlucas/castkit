@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "configuration"
+require_relative "inflector"
 
 # Castkit is a lightweight, type-safe data object system for Ruby.
 #
@@ -15,42 +16,89 @@ require_relative "configuration"
 #
 #   user = UserDto.new(name: "Alice", age: 30)
 #   user.to_h #=> { name: "Alice", age: 30 }
+#
+# @see Castkit::Contract
+# @see Castkit::DataObject
 module Castkit
+  # Namespace used for registering DataObjects generated from contracts.
+  module DataObjects; end
+
+  # Namespace used for registering contracts generated from DataObjects.
+  module Contracts; end
+
   class << self
     # Yields the global configuration object for customization.
     #
-    # @example
+    # @example Disabling array enforcement
     #   Castkit.configure do |config|
-    #     config.enforce_boolean_casting = false
+    #     config.enforce_typing = false
     #   end
     #
-    # @yieldparam config [Castkit::Configuration]
+    # @yieldparam config [Castkit::Configuration] the mutable config object
     # @return [void]
     def configure
       yield(configuration)
     end
 
-    # Retrieves the global Castkit configuration.
+    # Retrieves the global Castkit configuration instance.
     #
-    # @return [Castkit::Configuration] the configuration instance
+    # @return [Castkit::Configuration] the configuration object
     def configuration
       @configuration ||= Configuration.new
     end
 
-    # Generates a warning message if configuration.enable_warnings == true.
+    # Emits a warning to STDERR if `enable_warnings` is enabled in config.
     #
-    # @param message [String] The warning message
+    # @param message [String] the warning message
     # @return [void]
     def warning(message)
       warn message if configuration.enable_warnings
     end
 
-    # Determine if an object is a subclass of Castkit::DataObject.
+    # Checks whether a given object is a subclass of Castkit::DataObject.
     #
-    # @param obj [Object] The object to check
-    # @return [Boolean]
+    # @param obj [Object] the object to test
+    # @return [Boolean] true if obj is a Castkit::DataObject class
     def dataobject?(obj)
       obj.is_a?(Class) && obj.ancestors.include?(Castkit::DataObject)
+    end
+
+    # Returns a type caster lambda for the given type.
+    #
+    # Type casting performs both validation and deserialization on the provided value.
+    #
+    # @param type [Symbol] the registered type (e.g. :string)
+    # @return [Proc] a lambda that accepts a value and options and returns a casted result
+    def type_caster(type)
+      type_definition = configuration.fetch_type(type)
+
+      lambda do |value, validator: nil, options: {}, context: nil|
+        type_definition.class.cast!(value, validator: validator, options: options, context: context)
+      end
+    end
+
+    # Returns a serializer lambda for the given type.
+    #
+    # @param type [Symbol] the registered type (e.g. :string)
+    # @return [Proc] a lambda that calls `.serialize` on the type
+    def type_serializer(type)
+      ->(value) { configuration.fetch_type(type).serialize(value) }
+    end
+
+    # Returns a deserializer lambda for the given type.
+    #
+    # @param type [Symbol] the registered type (e.g. :string)
+    # @return [Proc] a lambda that calls `.deserialize` on the type
+    def type_deserializer(type)
+      ->(value) { configuration.fetch_type(type).deserialize(value) }
+    end
+
+    # Returns a validator lambda for the given type.
+    #
+    # @param type [Symbol] the registered type (e.g. :string)
+    # @return [Proc] a lambda that calls `.validate!` on the type
+    def type_validator(type)
+      ->(value) { configuration.fetch_type(type).validate!(value) }
     end
   end
 end

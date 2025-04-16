@@ -49,34 +49,6 @@ RSpec.describe Castkit::Attribute do
     end
   end
 
-  describe "#validate_value!" do
-    context "when value is nil and optional" do
-      let(:options) { { required: false } }
-
-      it "does not raise" do
-        expect { instance.send(:validate_value!, nil, context: :foo) }.not_to raise_error
-      end
-    end
-
-    context "when type is array or dataobject" do
-      let(:type) { %i[string integer] }
-
-      it "skips validation" do
-        expect { instance.send(:validate_value!, "x", context: :foo) }.not_to raise_error
-      end
-    end
-
-    context "when a validator is provided" do
-      let(:options) { { validator: dummy_validator } }
-
-      it "raises if validation fails" do
-        expect do
-          instance.send(:validate_value!, :invalid, context: :foo)
-        end.to raise_error(Castkit::AttributeError)
-      end
-    end
-  end
-
   describe "#normalize_type" do
     it "returns :string for String class" do
       attr = described_class.new(:foo, String)
