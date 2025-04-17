@@ -576,7 +576,7 @@ Castkit.configure do |config|
 end
 
 class MyDto < Castkit::DataObject
-  Castkit::Plugins.activate(self, :my_plugin)
+  enable_plugins :my_plugin
 end
 ```
 
@@ -598,6 +598,14 @@ You can then activate them:
 
 ```ruby
 Castkit::Plugins.activate(MyDto, :oj)
+```
+
+Or by using the `enable_plugins` helper method in `Castkit::DataObject`:
+
+```ruby
+class MyDto < Castkit::DataObject
+  enable_plugins :oj, :yaml
+end
 ```
 
 ---

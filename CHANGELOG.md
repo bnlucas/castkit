@@ -1,5 +1,38 @@
 ## [Unreleased]
 
+## [0.3.0] - 2025-04-16
+
+### Added
+
+- **CLI System (`castkit`)**:
+  - Introduced a full-featured CLI for generating and inspecting Castkit components.
+  - Supports:
+    - `castkit generate [component]` for scaffolding types, data objects, contracts, serializers, validators, and plugins.
+    - `castkit list [types|validators|contracts|dataobjects|serializers]` for inspecting the internal registry and available classes.
+  - Enables developer productivity and exploration through a single entry point.
+
+- **Plugin System**:
+  - Added `Castkit::Plugins` for modular runtime extensions.
+  - Plugins can be registered and activated on DTO classes via:
+
+    ```ruby
+    Castkit.configure do |config|
+      config.register_plugin(:oj, MyOjPlugin)
+    end
+
+    class MyDto < Castkit::DataObject
+      enable_plugins :oj
+    end
+    ```
+
+  - Plugins support `setup!(klass)` for optional initialization logic.
+
+- **Base Class Renames**:
+  - Introduced consistent naming conventions with `Castkit::Types::Base`, `Castkit::Serializers::Base`, `Castkit::Validators::Base`, etc.
+  - These will be excluded from list output automatically in CLI commands.
+
+---
+
 ## [0.2.0] - 2025-04-14
 
 ### Added
@@ -42,6 +75,8 @@
 
 - **Union type validation support** for both `Castkit::DataObject` and contracts, allowing attributes to accept multiple types (e.g., `[:string, :integer]`).
 
+---
+
 ## [0.1.2] - 2025-04-14
 
 ### Added
@@ -71,6 +106,8 @@
   end
   ```
 
+---
+
 ## [0.1.1] - 2025-04-13
 
 ### Added
@@ -86,6 +123,8 @@
   ```
 
   Useful when working with nested DataObject collections (e.g., for integration with ActiveRecord or serialization logic).
+
+---
 
 ## [0.1.0] - 2025-04-12
 
