@@ -63,7 +63,7 @@ module Castkit
         #   UserDto = Castkit::DataObject.from_contract(UserContract)
         #   dto = UserDto.new(id: "abc", email: "a@example.com")
         #
-        # @param contract [Class<Castkit::Contract::Generic>] the contract to convert
+        # @param contract [Class<Castkit::Contract::Base>] the contract to convert
         # @return [Class<Castkit::DataObject>] a new anonymous DataObject class
 
         def from_contract(contract)

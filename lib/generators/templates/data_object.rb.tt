@@ -1,0 +1,15 @@
+# frozen_string_literal: true
+
+module Castkit
+  module DataObjects
+    # Data transfer object for <%= config[:class_name] %>.
+    #
+    # @example Instantiation
+    #   <%= config[:class_name] %>.new(id: "123", name: "example")
+    class <%= config[:class_name] %> < Castkit::DataObject
+<% config[:attributes].each do |attr| -%>
+      <%= attr[:type] %> :<%= attr[:name] %>
+<% end -%>
+    end
+  end
+end

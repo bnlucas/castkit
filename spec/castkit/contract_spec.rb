@@ -28,7 +28,7 @@ RSpec.describe Castkit::Contract do
       result = contract.validate(id: 123)
 
       expect(result).to be_failure
-      expect(result.errors).to eq(id: "id must be a string")
+      expect(result.errors).to include(id: /id must be a string/)
     end
 
     it "respects optional fields" do

@@ -1,0 +1,24 @@
+# frozen_string_literal: true
+
+require "castkit/serializers/base"
+
+module Castkit
+  module Serializers
+    # Serializer for <%= config[:class_name] %> DTOs.
+    #
+    # This can be applied to a DataObject with:
+    #
+    # @example
+    #   class MyDto < Castkit::DataObject
+    #     serializer Castkit::Serializers::<%= config[:class_name] %>
+    #   end
+    class <%= config[:class_name] %> < Castkit::Serializers::Base
+      # Returns a serialized hash version of the object.
+      #
+      # @return [Hash]
+      def call
+        object.to_h
+      end
+    end
+  end
+end

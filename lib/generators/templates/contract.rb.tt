@@ -1,0 +1,24 @@
+# frozen_string_literal: true
+
+module Castkit
+  module Contracts
+    # Contract definition for <%= config[:class_name] %>.
+    #
+    # This contract can be used to validate structured input like:
+    #
+    # @example Validating input (soft)
+    #   result = Castkit::Contracts::<%= config[:class_name] %>.validate(params)
+    #   puts result.inspect # Castkit::Contract::Result instance
+    #
+    # @example Validating input (hard)
+    #   being
+    #     result = Castkit::Contracts::<%= config[:class_name] %>.validate!(params)
+    #   rescue Castkit::ContractError => e
+    #     puts e.errors
+    #   end
+    class <%= config[:class_name] %> < Castkit::Contract::Base<% if config[:attributes].empty? %>
+      # string :id<% else %><% config[:attributes].each do |attr| %>
+      <%= attr[:type] %> :<%= attr[:name] %><% end %><% end %>
+    end
+  end
+end

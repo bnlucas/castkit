@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Runtime dependencies
+  spec.add_dependency "thor"
 
   # Development dependencies
   spec.add_development_dependency "rspec"

@@ -52,10 +52,10 @@ module Castkit
       #
       # @return [String]
       def to_s
-        return "[Castkit] Contract validation passed for #{contract.inspect}" if success?
+        return "[Castkit] Contract validation passed for #{contract}" if success?
 
         parsed_errors = errors.map { |k, v| "  #{k}: #{v.inspect}" }.join("\n")
-        "[Castkit] Contract validation failed for #{contract.inspect}:\n#{parsed_errors}"
+        "[Castkit] Contract validation failed for #{contract}:\n#{parsed_errors}"
       end
 
       # @return [Hash{Symbol => Object}] the input validation and error hash

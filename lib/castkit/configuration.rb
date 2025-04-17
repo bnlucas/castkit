@@ -10,14 +10,14 @@ module Castkit
   class Configuration
     # Default mapping of primitive type definitions.
     #
-    # @return [Hash{Symbol => Castkit::Types::Generic}]
+    # @return [Hash{Symbol => Castkit::Types::Base}]
     DEFAULT_TYPES = {
       array: Castkit::Types::Collection.new,
       boolean: Castkit::Types::Boolean.new,
       date: Castkit::Types::Date.new,
       datetime: Castkit::Types::DateTime.new,
       float: Castkit::Types::Float.new,
-      hash: Castkit::Types::Generic.new,
+      hash: Castkit::Types::Base.new,
       integer: Castkit::Types::Integer.new,
       string: Castkit::Types::String.new
     }.freeze
@@ -36,8 +36,14 @@ module Castkit
       uuid: :string
     }.freeze
 
-    # @return [Hash{Symbol => Castkit::Types::Generic}] registered types
+    # @return [Hash{Symbol => Castkit::Types::Base}] registered types
     attr_reader :types
+
+    # Set default plugins that will be used globally in all Castkit::DataObject subclasses.
+    # This is equivalent to calling `enable_plugins` in every class.
+    #
+    # @return [Array<Symbol>] default plugin names to be applied to all DataObject subclasses
+    attr_accessor :default_plugins
 
     # Whether to raise an error if values should be validated before deserializing, e.g. true -> "true"
     # @return [Boolean]
@@ -79,6 +85,7 @@ module Castkit
       @raise_type_errors = true
       @enable_warnings = true
       @strict_by_default = true
+      @default_plugins = []
 
       apply_type_aliases!
     end
@@ -86,17 +93,17 @@ module Castkit
     # Registers a new type definition.
     #
     # @param type [Symbol] the symbolic type name (e.g., :uuid)
-    # @param klass [Class<Castkit::Types::Generic>] the class to register
+    # @param klass [Class<Castkit::Types::Base>] the class to register
     # @param override [Boolean] whether to allow overwriting existing registration
-    # @raise [Castkit::TypeError] if the type class is invalid or not a subclass of Generic
+    # @raise [Castkit::TypeError] if the type class is invalid or not a subclass of Castkit::Types::Base
     # @return [void]
     def register_type(type, klass, aliases: [], override: false)
       type = type.to_sym
       return if types.key?(type) && !override
 
       instance = klass.new
-      unless instance.is_a?(Castkit::Types::Generic)
-        raise Castkit::TypeError, "Expected subclass of Castkit::Types::Generic for `#{type}`"
+      unless instance.is_a?(Castkit::Types::Base)
+        raise Castkit::TypeError, "Expected subclass of Castkit::Types::Base for `#{type}`"
       end
 
       types[type] = instance
@@ -107,10 +114,26 @@ module Castkit
       aliases.each { |alias_type| register_type(alias_type, klass, override: override) }
     end
 
+    # Register a custom plugin for use with Castkit::DataObject.
+    #
+    # @example Loading as a default plugin
+    #   Castkit.configure do |config|
+    #     config.register_plugin(:custom, CustomPlugin)
+    #     config.default_plugins [:custom]
+    #   end
+    #
+    # @example Loading it directly in a Castkit::DataObject
+    #   class UserDto < Castkit::DataObject
+    #     enable_plugins :custom
+    #   end
+    def register_plugin(name, plugin)
+      Castkit::Plugins.register(name, plugin)
+    end
+
     # Returns the type handler for a given type symbol.
     #
     # @param type [Symbol]
-    # @return [Castkit::Types::Generic]
+    # @return [Castkit::Types::Base]
     # @raise [Castkit::TypeError] if the type is not registered
     def fetch_type(type)
       @types.fetch(type.to_sym) do

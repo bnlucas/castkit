@@ -1,0 +1,26 @@
+# frozen_string_literal: true
+
+require_relative "base"
+
+module Castkit
+  module Validators
+    # Validator for :<%= config[:name] %> attributes.
+    #
+    # Subclass of Castkit::Validators::Base. Used automatically by attributes or types that declare it.
+    #
+    # @example Manual use:
+    #   Castkit::Validators::<%= config[:class_name] %>.call(value, context: :my_field)
+    class <%= config[:class_name] %> < Castkit::Validators::Base
+      # Validates the value and raises a Castkit::AttributeError if invalid.
+      #
+      # @param value [Object] The value to validate
+      # @param options [Hash] Optional validation options
+      # @param context [Symbol] The attribute or context key for error messages
+      def call(value, options: {}, context: nil)
+        raise Castkit::AttributeError, "#{context} must be present" if value.nil?
+
+        value
+      end
+    end
+  end
+end

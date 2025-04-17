@@ -1,0 +1,37 @@
+# frozen_string_literal: true
+
+module Castkit
+  module Plugins
+    # <%= config[:class_name] %> plugin for Castkit::DataObject.
+    #
+    # This plugin can be enabled via:
+    #
+    #   class MyDto < Castkit::DataObject
+    #     enable_plugins :<%= config[:name] %>
+    #   end
+    #
+    # Or globally:
+    #
+    #   Castkit.configure do |config|
+    #     config.register_plugin(:<%= config[:name] %>, Castkit::Plugins::<%= config[:class_name] %>)
+    #     config.default_plugins << :<%= config[:name] %>
+    #   end
+    module <%= config[:class_name] %>
+      # Optional setup hook called during plugin activation
+      #
+      # @param klass [Class<Castkit::DataObject>]
+      # @return [void]
+      def self.setup!(klass)
+        # Custom setup logic here
+      end
+
+      # Optionally define an Extension module to be included into the DataObject class
+      #
+      # module Extension
+      #   def custom_behavior
+      #     # ...
+      #   end
+      # end
+    end
+  end
+end

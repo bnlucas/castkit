@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "generic"
-require_relative "../validators/numeric_validator"
+require_relative "base"
+require_relative "../validators/integer_validator"
 
 module Castkit
   module Types
@@ -13,7 +13,7 @@ module Castkit
     #
     # This class is used internally by Castkit when an attribute is defined with:
     #   `integer :count`
-    class Integer < Generic
+    class Integer < Base
       # Deserializes the input value to an Integer.
       #
       # @param value [Object]
@@ -30,7 +30,7 @@ module Castkit
         value
       end
 
-      # Validates the Integer value using Castkit's NumericValidator.
+      # Validates the Integer value using Castkit's IntegerValidator.
       #
       # Supports options like `min:` and `max:`.
       #
@@ -39,7 +39,7 @@ module Castkit
       # @param context [Symbol, String] attribute context for error messages
       # @return [void]
       def validate!(value, options: {}, context: {})
-        Castkit::Validators::NumericValidator.call(value, options: options, context: context)
+        Castkit::Validators::IntegerValidator.call(value, options: options, context: context)
       end
     end
   end

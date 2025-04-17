@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "contract/generic"
+require_relative "contract/base"
 
 module Castkit
   # Castkit::Contract provides a lightweight mechanism for defining and validating
@@ -31,9 +31,9 @@ module Castkit
       # @param name [String, Symbol, nil] Optional name for the contract.
       # @param validation_rules [Hash] Optional validation rules (e.g., `strict: true`).
       # @yield Optional DSL block to define attributes.
-      # @return [Class<Castkit::Contract::Generic>]
+      # @return [Class<Castkit::Contract::Base>]
       def build(name = nil, **validation_rules, &block)
-        klass = Class.new(Castkit::Contract::Generic)
+        klass = Class.new(Castkit::Contract::Base)
         klass.send(:define, name, nil, validation_rules: validation_rules, &block)
 
         klass
@@ -52,12 +52,12 @@ module Castkit
       #
       # @param source [Class<Castkit::DataObject>] the DataObject to generate the contract from
       # @param as [String, Symbol, nil] Optional custom name to use for the contract
-      # @return [Class<Castkit::Contract::Generic>]
+      # @return [Class<Castkit::Contract::Base>]
       def from_dataobject(source, as: nil)
         name = as || Castkit::Inflector.unqualified_name(source)
         name = Castkit::Inflector.underscore(name).to_sym
 
-        klass = Class.new(Castkit::Contract::Generic)
+        klass = Class.new(Castkit::Contract::Base)
         klass.send(:define, name, source, validation_rules: source.validation_rules)
 
         klass

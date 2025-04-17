@@ -1,0 +1,23 @@
+# frozen_string_literal: true
+
+require "spec_helper"
+require "castkit/validators/<%= config[:name] %>"
+
+RSpec.describe Castkit::Validators::<%= config[:class_name] %> do
+  subject(:validator) { described_class.new }
+
+  let(:context) { :<%= config[:name] %> }
+
+  describe "#call" do
+    it "returns the value if valid" do
+      valid = "example"
+      expect(validator.call(valid, context: context)).to eq(valid)
+    end
+
+    it "raises for invalid values" do
+      expect {
+        validator.call(nil, context: context)
+      }.to raise_error(Castkit::AttributeError, /#{context} must be present/)
+    end
+  end
+end

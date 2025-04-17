@@ -10,7 +10,7 @@
   - Developers may register custom types via `Castkit.configure`:
 
     ```ruby
-    class CustomType < Castkit::Types::Generic
+    class CustomType < Castkit::Types::Base
       def deserialize(value) ... end
       def validate!(value, **) ... end
     end

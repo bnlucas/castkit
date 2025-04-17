@@ -1,0 +1,55 @@
+# frozen_string_literal: true
+
+module Castkit
+  module Types
+    # Type definition for <%= config[:class_name] %> (:<%= config[:name] %>) attributes.
+    #
+    # This class is used internally by Castkit when an attribute is defined with:
+    #
+    # @example Registering <%= config[:class_name] %> as a valid type
+    #   Castkit.configure do |config|
+    #     config.register_type(:<%= config[:name] %>, Castkit::Types::<%= config[:class_name] %>, aliases: %i[custom_alias])
+    #   end
+    #
+    # @example Defining an attribute
+    #   class Data < Castkit::DataObject
+    #     <%= config[:name] %> :attribute_name
+    #     attribute :attribute_name, :<%= config[:name] %>
+    #   end
+    #
+    # @example Defining an attribute using an alias
+    #   class Data < Castkit::DataObject
+    #     custom_alias: :attribute_name
+    #     attribute :attribute_name, :custom_alias
+    #   end
+    class <%= config[:class_name] %> < Castkit::Types::Base
+      # Deserializes the input value to a <%= config[:class_name] %> instance.
+      #
+      # @param value [Object, nil] the value to deserialize
+      # @return [<%= config[:class_name] %>] the deserialized value
+      def deserialize(value)
+        # deserialization logic
+        # value.to_s
+      end
+
+      # Serializes the <%= config[:class_name] %> value.
+      #
+      # @param value [<%= config[:class_name] %>] the value to serialize
+      # @return [Object] the serialized value
+      def serialize(value)
+        # serialization logic
+        # value.to_s
+      end
+
+      # Validates the input value with a custom Castkit::Validators::<%= config[:class_name] %> validator.
+      #
+      # @param value [Object, nil] the value to validate
+      # @param options [Hash] the validation options
+      # @param context [Hash] the validation context
+      def validate!(value, options = {}, context = {})
+        # validation logic
+        # Castkit::Validators::<%= config[:class_name] %>.call(value, options: options, context: context)
+      end
+    end
+  end
+end

@@ -1,0 +1,42 @@
+# frozen_string_literal: true
+
+require "spec_helper"
+require "castkit/types/<%= config[:name] %>"
+
+# Spec for Castkit::Types::<%= config[:class_name] %>
+RSpec.describe Castkit::Types::<%= config[:class_name] %> do
+  subject(:type) { described_class.new }
+
+  it "is a subclass of Castkit::Types::Base" do
+    expect(described_class).to be < Castkit::Types::Base
+  end
+
+  describe "#deserialize" do
+    let(:input) { "input" }
+
+    it "converts a valid input" do
+      # expect(type.deserialize(input)).to eq(expected_value)
+    end
+  end
+
+  describe "#serialize" do
+    let(:value) { "value" }
+
+    it "converts the value to a serializable format" do
+      # expect(type.serialize(value)).to eq(expected_output)
+    end
+  end
+
+  describe "#validate!" do
+    let(:valid_value) { "valid" }
+    let(:invalid_value) { nil }
+
+    it "does not raise for valid input" do
+      # expect { type.validate!(valid_value) }.not_to raise_error
+    end
+
+    it "raises for invalid input" do
+      # expect { type.validate!(invalid_value) }.to raise_error(Castkit::AttributeError)
+    end
+  end
+end

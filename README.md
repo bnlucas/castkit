@@ -21,6 +21,8 @@ Castkit is designed to work seamlessly in service-oriented and API-driven archit
 - [DataObjects](#dataobjects)
 - [Contracts](#contracts)
 - [Advance Usage](#advanced-usage-coming-soon)
+- [Plugins](#plugins)
+- [Castkit CLI](#castkit-cli)
 - [Testing](#testing)
 - [Compatibility](#compatibility)
 - [License](#license)
@@ -58,14 +60,14 @@ Castkit comes with built-in support for primitive types and allows registration 
 
 ```ruby
 {
-  array:    Castkit::Types::Collection,
-  boolean:  Castkit::Types::Boolean,
-  date:     Castkit::Types::Date,
-  datetime: Castkit::Types::DateTime,
-  float:    Castkit::Types::Float,
-  hash:     Castkit::Types::Generic,
-  integer:  Castkit::Types::Integer,
-  string:   Castkit::Types::String
+        array: Castkit::Types::Collection,
+        boolean: Castkit::Types::Boolean,
+        date: Castkit::Types::Date,
+        datetime: Castkit::Types::DateTime,
+        float: Castkit::Types::Float,
+        hash: Castkit::Types::Base,
+        integer: Castkit::Types::Integer,
+        string: Castkit::Types::String
 }
 ```
 
@@ -374,7 +376,8 @@ from_contract = Castkit::DataObject.from_contract(contract)
 To override default serialization behavior:
 
 ```ruby
-class CustomSerializer < Castkit::Serializer
+
+class CustomSerializer < Castkit::Serializers::Base
   def call
     { payload: object.to_h }
   end
@@ -427,7 +430,8 @@ end
 Or subclass directly:
 
 ```ruby
-class MyContract < Castkit::Contract::Generic
+
+class MyContract < Castkit::Contract::Base
   string :id
   integer :count, required: false
 end
@@ -532,7 +536,7 @@ UserContract.validate!(id: "abc", address: { city: "Boston" })
 
 Castkit is designed to be modular and extendable. Future guides will cover:
 
-- Custom serializers (`Castkit::Serializer`)
+- Custom serializers (`Castkit::Serializers::Base`)
 - Integration layers:
     - `castkit-activerecord` for syncing with ActiveRecord models
     - `castkit-msgpack` for binary encoding
@@ -540,6 +544,278 @@ Castkit is designed to be modular and extendable. Future guides will cover:
 - OpenAPI-compatible schema generation
 - Declarative enums and union type helpers
 - Circular reference detection in nested serialization
+
+---
+
+## Plugins
+
+Castkit supports modular extensions through a lightweight plugin system. Plugins can modify or extend the behavior of `Castkit::DataObject` classes, such as adding serialization support, transformation helpers, or framework integrations.
+
+Plugins are just Ruby modules and can be registered and activated globally or per-class.
+
+---
+
+### 📦 Activating Plugins
+
+Plugins can be activated on any DataObject or at runtime:
+
+```ruby
+module MyPlugin
+  def self.setup!(klass)
+    # Optional: called after inclusion
+    klass.string :plugin_id
+  end
+
+  def plugin_feature
+    "Enabled!"
+  end
+end
+
+Castkit.configure do |config|
+  config.register_plugin(:my_plugin, MyPlugin)
+end
+
+class MyDto < Castkit::DataObject
+  Castkit::Plugins.activate(self, :my_plugin)
+end
+```
+
+This includes the `MyPlugin` module into `MyDto` and calls `MyPlugin.setup!(MyDto)` if defined.
+
+---
+
+### 🧩 Registering Plugins
+
+Plugins must be registered before use:
+
+```ruby
+Castkit.configure do |config|
+  config.register_plugin(:oj, Castkit::Plugins::Oj)
+end
+```
+
+You can then activate them:
+
+```ruby
+Castkit::Plugins.activate(MyDto, :oj)
+```
+
+---
+
+### 🧰 Plugin API
+
+| Method                        | Description |
+|------------------------------|-------------|
+| `Castkit::Plugins.register(:name, mod)` | Registers a plugin under a custom name. |
+| `Castkit::Plugins.activate(klass, *names)` | Includes one or more plugins into a class. |
+| `Castkit::Plugins.lookup!(:name)`        | Looks up the plugin by name or constant. |
+
+---
+
+### 📁 Plugin Structure
+
+Castkit looks for plugins under the `Castkit::Plugins` namespace by default:
+
+```ruby
+module Castkit
+  module Plugins
+    module Oj
+      def self.setup!(klass)
+        klass.include SerializationSupport
+      end
+    end
+  end
+end
+```
+
+To activate this:
+
+```ruby
+Castkit::Plugins.activate(MyDto, :oj)
+```
+
+You can also manually register plugins not under this namespace.
+
+---
+
+### ✅ Example Use Case
+
+```ruby
+module Castkit
+  module Plugins
+    module Timestamps
+      def self.setup!(klass)
+        klass.datetime :created_at
+        klass.datetime :updated_at
+      end
+    end
+  end
+end
+
+Castkit::Plugins.activate(UserDto, :timestamps)
+```
+
+This approach allows reusable, modular feature sets across DTOs with clean setup behavior.
+
+---
+
+## Castkit CLI
+
+Castkit includes a command-line interface to help scaffold and inspect DTO components with ease.
+
+The CLI is structured around two primary commands:
+
+- `castkit generate` — scaffolds boilerplate for Castkit components.
+- `castkit list` — introspects and displays registered or defined components.
+
+---
+
+## ✨ Generate Commands
+
+The `castkit generate` command provides subcommands for creating files for all core Castkit component types.
+
+### 🧱 DataObject
+
+```bash
+castkit generate dataobject User name:string age:integer
+```
+
+Creates:
+
+- `lib/castkit/data_objects/user.rb`
+- `spec/castkit/data_objects/user_spec.rb`
+
+### 📄 Contract
+
+```bash
+castkit generate contract UserInput id:string email:string
+```
+
+Creates:
+
+- `lib/castkit/contracts/user_input.rb`
+- `spec/castkit/contracts/user_input_spec.rb`
+
+### 🔌 Plugin
+
+```bash
+castkit generate plugin Oj
+```
+
+Creates:
+
+- `lib/castkit/plugins/oj.rb`
+- `spec/castkit/plugins/oj_spec.rb`
+
+### 🧪 Validator
+
+```bash
+castkit generate validator Money
+```
+
+Creates:
+
+- `lib/castkit/validators/money.rb`
+- `spec/castkit/validators/money_spec.rb`
+
+### 🧬 Type
+
+```bash
+castkit generate type money
+```
+
+Creates:
+
+- `lib/castkit/types/money.rb`
+- `spec/castkit/types/money_spec.rb`
+
+### 📦 Serializer
+
+```bash
+castkit generate serializer Json
+```
+
+Creates:
+
+- `lib/castkit/serializers/json.rb`
+- `spec/castkit/serializers/json_spec.rb`
+
+You can disable test generation with `--no-spec`.
+
+---
+
+## 📋 List Commands
+
+The `castkit list` command provides an interface to view internal Castkit definitions or project-registered components.
+
+### 🧾 List Types
+
+```bash
+castkit list types
+```
+
+Displays a grouped list of:
+
+- Native types (defined by Castkit)
+- Custom types (registered via `Castkit.configure`)
+
+Example:
+
+```bash
+Native Types:
+  Castkit::Types::String         - :string, :str, :uuid
+
+Custom Types:
+  MyApp::Types::Money            - :money
+```
+
+### 🔍 List Validators
+
+```bash
+castkit list validators
+```
+
+Displays all validator classes defined in `lib/castkit/validators` or custom-defined under `Castkit::Validators`.
+
+Castkit validators are tagged `[Castkit]`, and others as `[Custom]`.
+
+### 📑 List Contracts
+
+```bash
+castkit list contracts
+```
+
+Lists all contracts in the `Castkit::Contracts` namespace and related files.
+
+### 📦 List DataObjects
+
+```bash
+castkit list dataobjects
+```
+
+Lists all DTOs in the `Castkit::DataObjects` namespace.
+
+### 🧪 List Serializers
+
+```bash
+castkit list serializers
+```
+
+Lists all serializer classes and their source origin.
+
+---
+
+## 🧰 Example Usage
+
+```bash
+castkit generate dataobject Product name:string price:float
+castkit generate contract ProductInput name:string
+
+castkit list types
+castkit list validators
+```
+
+The CLI is designed to provide a familiar Rails-like generator experience, tailored for Castkit’s data-first architecture.
 
 ---
 

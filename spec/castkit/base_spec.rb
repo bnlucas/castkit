@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "castkit/serializer"
-require "castkit/default_serializer"
+require "castkit/serializers/base"
+require "castkit/serializers/default_serializer"
 
-RSpec.describe Castkit::Serializer do
+RSpec.describe Castkit::Serializers::Base do
   let(:object) { double("SerializableObject") }
 
   describe ".call" do
@@ -20,13 +20,13 @@ RSpec.describe Castkit::Serializer do
   end
 
   describe "#serialize_with_default" do
-    it "delegates to Castkit::DefaultSerializer" do
+    it "delegates to Castkit::Serializers::DefaultSerializer" do
       serializer = Class.new(described_class) do
         public :serialize_with_default
       end.new(object)
 
-      allow(Castkit::DefaultSerializer).to receive(:call).with(object,
-                                                               visited: kind_of(Set)).and_return({ fallback: true })
+      allow(Castkit::Serializers::DefaultSerializer)
+        .to receive(:call).with(object, visited: kind_of(Set)).and_return({ fallback: true })
 
       expect(serializer.serialize_with_default).to eq({ fallback: true })
     end

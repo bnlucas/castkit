@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+require "spec_helper"
+require "castkit/serializers/<%= config[:name] %>"
+
+RSpec.describe Castkit::Serializers::<%= config[:class_name] %> do
+  let(:object) { double("Castkit::DataObject", to_h: { foo: "bar" }) }
+
+  subject(:serializer) { described_class.new(object) }
+
+  it "serializes using #call" do
+    expect(serializer.call).to eq({ foo: "bar" })
+  end
+end

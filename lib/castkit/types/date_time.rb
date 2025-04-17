@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "date"
-require_relative "generic"
+require_relative "base"
 
 module Castkit
   module Types
@@ -12,7 +12,7 @@ module Castkit
     #
     # This class is used internally by Castkit when an attribute is defined with:
     #   `datetime :published_ad`
-    class DateTime < Generic
+    class DateTime < Base
       # Deserializes the input value to a `DateTime` instance.
       #
       # @param value [Object]

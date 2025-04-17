@@ -14,7 +14,7 @@ module Castkit
     # ephemeral or reusable contract classes.
     #
     # @example Subclassing directly
-    #   class MyContract < Castkit::Contract::Generic
+    #   class MyContract < Castkit::Contract::Base
     #     string :id
     #     integer :count, required: false
     #   end
@@ -30,7 +30,7 @@ module Castkit
     #   UserContract.validate!(id: "123")
     #
     # @see Castkit::Contract.build
-    class Generic
+    class Base
       extend Castkit::Core::Config
       extend Castkit::Core::AttributeTypes
       extend Castkit::Core::Registerable
@@ -69,7 +69,6 @@ module Castkit
         # @return [Castkit::Contract::Result]
         def validate(input)
           validate!(input)
-          Castkit::Contract::Result.new(definition[:name].to_s, input)
         rescue Castkit::ContractError => e
           Castkit::Contract::Result.new(definition[:name].to_s, input, errors: e.errors)
         end
@@ -81,6 +80,7 @@ module Castkit
         # @return [void]
         def validate!(input)
           Castkit::Contract::Validator.call!(attributes.values, input, **validation_rules)
+          Castkit::Contract::Result.new(definition[:name].to_s, input)
         end
 
         # Returns internal contract metadata.
@@ -88,7 +88,7 @@ module Castkit
         # @return [Hash]
         def definition
           @definition ||= {
-            name: :ephemeral_contract,
+            name: :ephemeral,
             attributes: {}
           }
         end
@@ -108,7 +108,7 @@ module Castkit
         # @param source [Castkit::DataObject, nil]
         # @param block [Proc, nil]
         # @return [Hash]
-        def define(name = :ephemeral_contract, source = nil, validation_rules: {}, &block)
+        def define(name = :ephemeral, source = nil, validation_rules: {}, &block)
           validate_definition!(source, &block)
 
           if source

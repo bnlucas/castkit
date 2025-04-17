@@ -20,11 +20,14 @@ require_relative "inflector"
 # @see Castkit::Contract
 # @see Castkit::DataObject
 module Castkit
-  # Namespace used for registering DataObjects generated from contracts.
+  # Namespace used for registering generated DataObjects.
   module DataObjects; end
 
-  # Namespace used for registering contracts generated from DataObjects.
+  # Namespace used for registering generated contracts.
   module Contracts; end
+
+  # Namespace used for registering generated plugins.
+  module Plugins; end
 
   class << self
     # Yields the global configuration object for customization.

@@ -43,7 +43,7 @@ RSpec.describe Castkit::DataObject do
       expect do
         contract.validate!(id: 123)
       rescue Castkit::ContractError => e
-        expect(e.errors).to include(id: "id must be a string")
+        expect(e.errors).to include(id: /id must be a string/)
         raise e
       end.to raise_error(Castkit::ContractError)
 
@@ -69,15 +69,15 @@ RSpec.describe Castkit::DataObject do
 
   describe ".serializer" do
     it "gets and sets a custom serializer" do
-      custom_serializer = Class.new(Castkit::Serializer)
+      custom_serializer = Class.new(Castkit::Serializers::Base)
       subclass.serializer(custom_serializer)
       expect(subclass.serializer).to eq(custom_serializer)
     end
 
-    it "raises if serializer is not a Castkit::Serializer" do
+    it "raises if serializer is not a Castkit::Serializers::Base" do
       expect do
         subclass.serializer(Class.new)
-      end.to raise_error(ArgumentError, /must inherit from Castkit::Serializer/)
+      end.to raise_error(ArgumentError, /must inherit from Castkit::Serializers::Base/)
     end
   end
 

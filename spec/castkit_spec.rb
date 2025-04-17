@@ -184,7 +184,7 @@ RSpec.describe Castkit do
       expect do
         User.new(id: "ok", email: "y", tags: [true])
       rescue Castkit::ContractError => e
-        expect(e.errors).to include(tags: { 0 => "tags[0] must be a string" })
+        expect(e.errors).to include(tags: { 0 => /tags\[0\] must be a string/ })
         raise e
       end.to raise_error(Castkit::ContractError)
     end

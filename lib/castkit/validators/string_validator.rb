@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative "base_validator"
+require_relative "base"
 
 module Castkit
   module Validators
     # Validates that a value is a String and optionally conforms to a format.
     #
     # Supports format validation using a Regexp or a custom Proc.
-    class StringValidator < Castkit::Validators::BaseValidator
+    class StringValidator < Castkit::Validators::Base
       # Validates the string value.
       #
       # @param value [Object] the value to validate
@@ -16,8 +16,7 @@ module Castkit
       # @raise [Castkit::AttributeError] if value is not a string or fails format validation
       # @return [void]
       def call(value, options:, context:)
-        raise Castkit::AttributeError, "#{context} must be a string" unless value.is_a?(String)
-
+        return type_error!(:string, value, context: context) unless value.is_a?(::String)
         return unless options[:format]
 
         case options[:format]

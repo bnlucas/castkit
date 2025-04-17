@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+require "spec_helper"
+require "castkit/plugins/<%= config[:name] %>"
+
+RSpec.describe Castkit::Plugins::<%= config[:class_name] %> do
+  let(:plugin) { described_class }
+
+  describe ".setup!" do
+    let(:klass) do
+      Class.new(Castkit::DataObject)
+    end
+
+    it "can be setup on a dataobject class" do
+      expect { plugin.setup!(klass) }.not_to raise_error
+    end
+  end
+end

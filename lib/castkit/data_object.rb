@@ -3,7 +3,7 @@
 require "json"
 require_relative "error"
 require_relative "attribute"
-require_relative "default_serializer"
+require_relative "serializers/default_serializer"
 require_relative "contract/validator"
 require_relative "core/config"
 require_relative "core/attributes"
@@ -11,6 +11,7 @@ require_relative "core/attribute_types"
 require_relative "core/registerable"
 require_relative "ext/data_object/contract"
 require_relative "ext/data_object/deserialization"
+require_relative "ext/data_object/plugins"
 require_relative "ext/data_object/serialization"
 
 module Castkit
@@ -34,6 +35,7 @@ module Castkit
     extend Castkit::Core::AttributeTypes
     extend Castkit::Core::Registerable
     extend Castkit::Ext::DataObject::Contract
+    extend Castkit::Ext::DataObject::Plugins
 
     include Castkit::Ext::DataObject::Serialization
     include Castkit::Ext::DataObject::Deserialization
@@ -56,12 +58,14 @@ module Castkit
 
       # Gets or sets the serializer class to use for instances of this object.
       #
-      # @param value [Class<Castkit::Serializer>, nil]
-      # @return [Class<Castkit::Serializer>, nil]
-      # @raise [ArgumentError] if value does not inherit from Castkit::Serializer
+      # @param value [Class<Castkit::Serializers::Base>, nil]
+      # @return [Class<Castkit::Serializers::Base>, nil]
+      # @raise [ArgumentError] if value does not inherit from Castkit::Serializers::Base
       def serializer(value = nil)
         if value
-          raise ArgumentError, "Serializer must inherit from Castkit::Serializer" unless value < Castkit::Serializer
+          unless value < Castkit::Serializers::Base
+            raise ArgumentError, "Serializer must inherit from Castkit::Serializers::Base"
+          end
 
           @serializer = value
         else
@@ -154,9 +158,9 @@ module Castkit
 
     # Returns the serializer instance or default for this object.
     #
-    # @return [Class<Castkit::Serializer>]
+    # @return [Class<Castkit::Serializers::Base>]
     def serializer
-      @serializer ||= self.class.serializer || Castkit::DefaultSerializer
+      @serializer ||= self.class.serializer || Castkit::Serializers::DefaultSerializer
     end
 
     # Returns false if self.class.allow_unknown == true, otherwise the value of self.class.strict.

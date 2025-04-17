@@ -24,7 +24,7 @@ module Castkit
       # @param string [String, Symbol] the input to convert
       # @return [String] the PascalCase representation
       def pascalize(string)
-        string.to_s.split("_").map(&:capitalize).join
+        underscore(string).to_s.split("_").map(&:capitalize).join
       end
 
       # Converts a PascalCase or camelCase string to snake_case.

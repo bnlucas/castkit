@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "castkit/default_serializer"
+require "castkit/serializers/default_serializer"
 
-RSpec.describe Castkit::DefaultSerializer do
+RSpec.describe Castkit::Serializers::DefaultSerializer do
   let(:attribute) do
     double("Attribute",
            field: :name,

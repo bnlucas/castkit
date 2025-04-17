@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "generic"
+require_relative "base"
+require_relative "../validators/boolean_validator"
 
 module Castkit
   module Types
@@ -10,7 +11,7 @@ module Castkit
     #
     # This class is used internally by Castkit when an attribute is defined with:
     #   `boolean :is_active`
-    class Boolean < Generic
+    class Boolean < Base
       # Deserializes the input into a boolean value.
       #
       # Accepts:
@@ -21,14 +22,7 @@ module Castkit
       # @return [Boolean]
       # @raise [Castkit::TypeError] if the value cannot be coerced to a boolean
       def deserialize(value)
-        case value.to_s.downcase
-        when "true", "1"
-          true
-        when "false", "0"
-          false
-        else
-          type_error!(:boolean, value)
-        end
+        value
       end
 
       # Serializes the boolean value (pass-through).
@@ -37,6 +31,16 @@ module Castkit
       # @return [Boolean]
       def serialize(value)
         value
+      end
+
+      # Validates the Boolean value.
+      #
+      # @param value [Object]
+      # @param options [Hash] validation options
+      # @param context [Symbol, String] attribute context for error messages
+      # @return [void]
+      def validate!(value, options: {}, context: {})
+        Castkit::Validators::BooleanValidator.call(value, options: options, context: context)
       end
     end
   end

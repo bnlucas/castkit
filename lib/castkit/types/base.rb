@@ -2,14 +2,14 @@
 
 module Castkit
   module Types
-    # Generic base class for type definitions in Castkit.
+    # Abstract base class for type definitions in Castkit.
     #
     # Provides default behavior for (de)serialization, validation, and coercion.
     # All primitive types should subclass this and override methods as needed.
     #
     # The `cast!` method is the primary entry point used by attribute processing
     # to validate and coerce values in a predictable order.
-    class Generic
+    class Base
       class << self
         # Coerces and validates a value for use in a Castkit DataObject.
         #
@@ -69,7 +69,7 @@ module Castkit
 
         # Builds a default validator from the instance itself.
         #
-        # @param instance [Castkit::Types::Generic]
+        # @param instance [Castkit::Types::Base]
         # @return [Proc] a lambda wrapping `#validate!`
         def default_validator(instance)
           lambda do |value, options: {}, context: nil|
@@ -111,10 +111,9 @@ module Castkit
       # @param type [Symbol]
       # @param value [Object, nil]
       # @return [void]
-      def type_error!(type, value)
-        message = "value must be a #{type}, got #{value.inspect}"
-
-        raise Castkit::TypeError, message if Castkit.configuration.raise_type_errors
+      def type_error!(type, value, context: nil)
+        message = "#{context || "value"} must be a #{type}, got #{value}"
+        raise Castkit::AttributeError, message if Castkit.configuration.raise_type_errors
 
         Castkit.warning "[Castkit] #{message}" if Castkit.configuration.enable_warnings
       end

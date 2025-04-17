@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "generic"
+require_relative "base"
 require_relative "../validators/string_validator"
 
 module Castkit
@@ -12,7 +12,7 @@ module Castkit
     #
     # This class is used internally by Castkit when an attribute is defined with:
     #   `string :id`
-    class String < Generic
+    class String < Base
       # Deserializes the value by coercing it to a string using `to_s`.
       #
       # @param value [Object]

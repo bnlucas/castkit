@@ -1,0 +1,36 @@
+# frozen_string_literal: true
+
+require "spec_helper"
+require "castkit/data_objects/<%= config[:name] %>"
+
+RSpec.describe Castkit::DataObjects::<%= config[:class_name] %> do
+  subject(:instance) { described_class.new(attributes) }
+<% if config[:attributes].empty? %>
+  let(:attributes) { {} }
+  <% else %>
+  let(:attributes) do
+    {<% config[:attributes].each do |attr| %>
+      <%= attr[:name] %>: <%= config[:default_values].fetch(attr[:type], nil) %>,<% end %>
+    }
+  end
+<% end %>
+  it "is a Castkit::DataObject" do
+    expect(described_class).to be < Castkit::DataObject
+  end
+<% config[:attributes].each do |attr| %>
+  describe "#<%= attr[:name] %>" do
+    it "is defined on the DTO" do
+      expect(described_class.attributes.keys).to include(:<%= attr[:name] %>)
+    end
+
+    it "returns the attribute options" do
+      # test for options set on the attribute
+      #   `<%= attr[:type] %> :<%= attr[:name] %>, required: true`
+      # expect(described_class.attributes[:<%= attr[:name] %>).to include(required: true)
+    end
+
+    it "returns the expected value" do
+      expect(instance.<%= attr[:name] %>).to eq(attributes[:<%= attr[:name] %>])
+    end
+  end
+<% end %>end

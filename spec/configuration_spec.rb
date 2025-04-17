@@ -26,7 +26,7 @@ RSpec.describe Castkit::Configuration do
   end
 
   describe "#register_type" do
-    let(:mock_definition) { Class.new(Castkit::Types::Generic) }
+    let(:mock_definition) { Class.new(Castkit::Types::Base) }
 
     it "registers a new validator for a type" do
       config.register_type(:custom, mock_definition)
@@ -44,7 +44,7 @@ RSpec.describe Castkit::Configuration do
       expect(config.fetch_type(:string)).to be_a(mock_definition)
     end
 
-    it "raises if definition is not a subclass of Castkit::Types::Generic" do
+    it "raises if definition is not a subclass of Castkit::Types::Base" do
       invalid = Class.new
 
       expect do
@@ -54,7 +54,7 @@ RSpec.describe Castkit::Configuration do
   end
 
   describe "#reset_typess!" do
-    let(:mock_definition) { Class.new(Castkit::Types::Generic) }
+    let(:mock_definition) { Class.new(Castkit::Types::Base) }
 
     it "resets to default types" do
       config.register_type(:string, mock_definition, override: true)

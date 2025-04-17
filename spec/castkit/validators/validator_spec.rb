@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Castkit::Validators::BaseValidator do
+RSpec.describe Castkit::Validators::Base do
   describe ".call" do
     it "instantiates and delegates to instance #call" do
       klass = Class.new(described_class) do

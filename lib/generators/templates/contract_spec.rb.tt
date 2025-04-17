@@ -1,0 +1,76 @@
+# frozen_string_literal: true
+
+require "spec_helper"
+require "castkit/contracts/<%= config[:name] %>"
+
+RSpec.describe Castkit::Contracts::<%= config[:class_name] %> do
+  subject(:contract) { described_class }
+<% if config[:attributes].empty? %>
+  let(:attributes) { {} }
+  <% else %>
+  let(:attributes) do
+    {<% config[:attributes].each do |attr| %>
+      <%= attr[:name] %>: <%= config[:default_values].fetch(attr[:type], "nil") %>,<% end %>
+    }
+  end
+<% end %>
+  it "is a Castkit::Contract" do
+    expect(contract).to be < Castkit::Contract::Base
+  end
+<% if config[:attributes].any? %>
+  describe ".validate" do
+    it "returns success with valid input" do
+      result = contract.validate(attributes)
+      expect(result).to be_success
+    end
+
+    it "returns failure with missing required fields" do
+      field = contract.attributes.keys.first
+      contract.attributes[field].options[:required] = true
+
+      result = contract.validate(attributes.reject { |k| k == field })
+      expect(result).to be_failure
+      expect(result.errors).to include({ field => "#{field} is required" })
+    end
+
+    it "returns failure with invalid value types" do
+      field = :<%= config[:attributes].first[:name] %>
+      field_type = :<%= config[:attributes].first[:type] %>
+
+      result = contract.validate(attributes.merge({ field => <%= config[:invalid_types].fetch(config[:attributes].first[:type], nil) %> }))
+      expect(result).to be_failure
+      expect(result.errors).to include({ field => "#{field} must be a #{field_type}" })
+    end
+  end
+
+  describe ".validate!" do
+    it "returns success with valid input" do
+      result = contract.validate!(attributes)
+      expect(result).to be_success
+    end
+
+    it "raises an error with missing required fields" do
+      field = contract.attributes.keys.first
+      contract.attributes[field].options[:required] = true
+
+      expect do
+        contract.validate!(attributes.reject { |k| k == field })
+      rescue Castkit::ContractError => e
+        expect(e.errors).to include({ field => "#{field} is required" })
+        raise e
+      end.to raise_error(Castkit::ContractError)
+    end
+
+    it "raises an error with invalid value types" do
+      field = :<%= config[:attributes].first[:name] %>
+      field_type = :<%= config[:attributes].first[:type] %>
+
+      expect do
+        contract.validate!(attributes.merge({ field => <%= config[:invalid_types].fetch(config[:attributes].first[:type], nil) %> }))
+      rescue Castkit::ContractError => e
+        expect(e.errors).to include({ field => "#{field} must be a #{field_type}" })
+        raise e
+      end.to raise_error(Castkit::ContractError)
+    end
+  end<% end %>
+end
