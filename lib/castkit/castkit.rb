@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "configuration"
-require_relative "inflector"
+require_relative "core/attribute_types"
 
 # Castkit is a lightweight, type-safe data object system for Ruby.
 #
@@ -63,7 +62,10 @@ module Castkit
     # @param obj [Object] the object to test
     # @return [Boolean] true if obj is a Castkit::DataObject class
     def dataobject?(obj)
-      obj.is_a?(Class) && obj.ancestors.include?(Castkit::DataObject)
+      obj.is_a?(Class) && (
+        obj <= Castkit::DataObject ||
+          obj.ancestors.include?(Castkit::DSL::DataObject)
+      )
     end
 
     # Returns a type caster lambda for the given type.
@@ -105,3 +107,10 @@ module Castkit
     end
   end
 end
+
+require_relative "configuration"
+require_relative "inflector"
+require_relative "version"
+require_relative "attribute"
+require_relative "contract"
+require_relative "data_object"

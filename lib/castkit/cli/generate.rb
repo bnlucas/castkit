@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "thor"
+require_relative "../../generators/attribute"
 require_relative "../../generators/contract"
 require_relative "../../generators/data_object"
 require_relative "../../generators/plugin"
@@ -28,6 +29,19 @@ module Castkit
         args = [Castkit::Inflector.pascalize(name), fields]
         args << "--no-spec" unless options[:spec]
         Castkit::Generators::Contract.start(args)
+      end
+
+      desc "attribute NAME", "Generates a new Castkit attribute"
+      method_option :spec, type: :boolean, default: true
+      # Generates a new attribute definition class.
+      #
+      # @param name [String] the class name for the attribute
+      # @param fields [Array<String>] optional attribute options
+      # @return [void]
+      def attribute(name, *fields)
+        args = [Castkit::Inflector.pascalize(name), fields]
+        args << "--no-spec" unless options[:spec]
+        Castkit::Generators::Attribute.start(args)
       end
 
       desc "dataobject NAME", "Generates a new Castkit DataObject"

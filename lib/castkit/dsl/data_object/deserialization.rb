@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Castkit
-  module Ext
+  module DSL
     module DataObject
       # Adds deserialization support for Castkit::DataObject instances.
       #

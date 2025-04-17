@@ -3,7 +3,7 @@
 require_relative "../../contract"
 
 module Castkit
-  module Ext
+  module DSL
     module DataObject
       # Extension module that adds contract support to Castkit::DataObject classes.
       #

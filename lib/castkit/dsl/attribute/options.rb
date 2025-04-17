@@ -3,7 +3,7 @@
 require_relative "../../data_object"
 
 module Castkit
-  module Ext
+  module DSL
     module Attribute
       # Provides access to normalized attribute options and helper predicates.
       #

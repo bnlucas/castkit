@@ -4,13 +4,13 @@ require_relative "error_handling"
 require_relative "options"
 
 module Castkit
-  module Ext
+  module DSL
     module Attribute
       # Provides validation logic for attribute configuration.
       #
       # These checks are typically performed at attribute initialization to catch misconfigurations early.
       module Validation
-        include Castkit::Ext::Attribute::ErrorHandling
+        include Castkit::DSL::Attribute::ErrorHandling
 
         private
 
@@ -58,7 +58,7 @@ module Castkit
         # @raise [Castkit::AttributeError] if any access mode is invalid and enforcement is enabled
         def validate_access!
           access.each do |mode|
-            next if Castkit::Ext::Attribute::Options::DEFAULT_OPTIONS[:access].include?(mode)
+            next if Castkit::Attributes::Options::DEFAULTS[:access].include?(mode)
 
             handle_error(:access, mode: mode, context: to_h)
           end

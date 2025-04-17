@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Castkit
-  module Ext
+  module DSL
     module DataObject
       # Provides per-class serialization configuration for Castkit::Dataobject, including
       # root key handling and ignore rules.

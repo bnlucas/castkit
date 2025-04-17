@@ -5,14 +5,7 @@ require_relative "error"
 require_relative "attribute"
 require_relative "serializers/default_serializer"
 require_relative "contract/validator"
-require_relative "core/config"
-require_relative "core/attributes"
-require_relative "core/attribute_types"
-require_relative "core/registerable"
-require_relative "ext/data_object/contract"
-require_relative "ext/data_object/deserialization"
-require_relative "ext/data_object/plugins"
-require_relative "ext/data_object/serialization"
+require_relative "dsl/data_object"
 
 module Castkit
   # Base class for defining declarative, typed data transfer objects (DTOs).
@@ -30,25 +23,9 @@ module Castkit
   #   user = UserDto.new(name: "Alice", age: 30)
   #   user.to_json #=> '{"name":"Alice","age":30}'
   class DataObject
-    extend Castkit::Core::Config
-    extend Castkit::Core::Attributes
-    extend Castkit::Core::AttributeTypes
-    extend Castkit::Core::Registerable
-    extend Castkit::Ext::DataObject::Contract
-    extend Castkit::Ext::DataObject::Plugins
-
-    include Castkit::Ext::DataObject::Serialization
-    include Castkit::Ext::DataObject::Deserialization
+    include Castkit::DSL::DataObject
 
     class << self
-      # Registers the current class under `Castkit::DataObjects`.
-      #
-      # @param as [String, Symbol, nil] The constant name to use (PascalCase). Defaults to class name or "Anonymous".
-      # @return [Class] the registered dataobject class
-      def register!(as: nil)
-        super(namespace: :dataobjects, as: as)
-      end
-
       def build(&block)
         klass = Class.new(self)
         klass.class_eval(&block) if block_given?

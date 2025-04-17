@@ -2,11 +2,11 @@
 
 require "spec_helper"
 
-RSpec.describe Castkit::Ext::Attribute::Options do
+RSpec.describe Castkit::DSL::Attribute::Options do
   let(:dummy_dataobject_class) { Class.new(Castkit::DataObject) }
   let(:dummy_class) do
     Class.new do
-      include Castkit::Ext::Attribute::Options
+      include Castkit::DSL::Attribute::Options
 
       attr_reader :field, :type, :options
 
@@ -14,7 +14,7 @@ RSpec.describe Castkit::Ext::Attribute::Options do
         @field = field
         @type = type
         @default = default
-        @options = Castkit::Ext::Attribute::Options::DEFAULT_OPTIONS.merge(options)
+        @options = Castkit::Attributes::Options::DEFAULTS.merge(options)
       end
     end
   end

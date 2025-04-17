@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+require "castkit/attributes/definition"
+
+module Castkit
+  module Attributes
+    # Attribute definition for <%= config[:class_name] %>.
+    #
+    # This definition can be reused across DataObjects to avoid repeating shared options.
+    #
+    # @example
+    #   class UserDto < Castkit::DataObject
+    #     include Castkit::Attributes
+    #
+    #     attribute :name, using: <%= config[:class_name] %>
+    #   end
+    class <%= config[:class_name] %> < Castkit::Attributes::Definition
+      <% if config[:type].empty? %># type :string<% else %>type :<%= config[:type] %><% end %>
+    end
+  end
+end

@@ -2,19 +2,19 @@
 
 require "spec_helper"
 
-RSpec.describe Castkit::Ext::Attribute::Validation do
+RSpec.describe Castkit::DSL::Attribute::Validation do
   let(:dummy_class) do
     Class.new do
-      include Castkit::Ext::Attribute::Options
-      include Castkit::Ext::Attribute::Access
-      include Castkit::Ext::Attribute::Validation
+      include Castkit::DSL::Attribute::Options
+      include Castkit::DSL::Attribute::Access
+      include Castkit::DSL::Attribute::Validation
 
       attr_reader :field, :type, :options
 
       def initialize(type: :string, field: :test_field, **options)
         @type = type
         @field = field
-        @options = Castkit::Ext::Attribute::Options::DEFAULT_OPTIONS.merge(options)
+        @options = Castkit::Attributes::Options::DEFAULTS.merge(options)
       end
 
       def to_h

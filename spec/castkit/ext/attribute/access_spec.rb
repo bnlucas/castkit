@@ -16,10 +16,10 @@ RSpec.shared_examples "serialization skip check" do |access:, ignore:, expected:
   end
 end
 
-RSpec.describe Castkit::Ext::Attribute::Access do
+RSpec.describe Castkit::DSL::Attribute::Access do
   let(:dummy_class) do
     Class.new do
-      include Castkit::Ext::Attribute::Access
+      include Castkit::DSL::Attribute::Access
 
       attr_reader :options
 

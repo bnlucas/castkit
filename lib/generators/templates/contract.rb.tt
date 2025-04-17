@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "castkit/contracts/base"
+
 module Castkit
   module Contracts
     # Contract definition for <%= config[:class_name] %>.

@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "castkit/version"
-require_relative "castkit/attribute"
-require_relative "castkit/contract"
-require_relative "castkit/data_object"
+require_relative "castkit/castkit"
 
 # Castkit is a lightweight, type-safe data object system for Ruby.
 #

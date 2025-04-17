@@ -2,10 +2,10 @@
 
 require "spec_helper"
 
-RSpec.describe Castkit::Ext::DataObject::Deserialization do
+RSpec.describe Castkit::DSL::DataObject::Deserialization do
   let(:klass) do
     Class.new do
-      include Castkit::Ext::DataObject::Deserialization
+      include Castkit::DSL::DataObject::Deserialization
 
       def self.attributes
         @attributes ||= {}

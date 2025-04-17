@@ -1,0 +1,41 @@
+# frozen_string_literal: true
+
+require "spec_helper"
+require "castkit/attributes/<%= config[:name] %>"
+
+RSpec.describe Castkit::Attributes::<%= config[:class_name] %> do
+  subject(:attribute) { described_class }
+
+  let(:type) { attribute.definition[:type] }
+  let(:options) { attribute.definition[:options] }
+
+  describe ".definition" do
+    it "returns a valid definition" do
+      expect(type).to be_a(Symbol).or be_a(Class)
+      expect(options).to be_a(Hash)
+    end
+  end
+
+  describe "defined type" do
+    it "returns defined type" do
+      expect(type).to eq(:<%= config[:type] %>)
+    end
+  end
+
+  describe "defined options" do
+    it "includes expected keys" do
+      expect(options.keys).to all(be_a(Symbol))
+    end
+
+    it "includes known default keys" do
+      expect(options.keys).to include(:required, :access)
+    end
+  end
+
+  describe "DSL behavior" do
+    it "overrides required and access values" do
+      expect(options[:required]).to be(true)
+      expect(options[:access]).to eq(%i[read write])
+    end
+  end
+end

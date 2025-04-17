@@ -2,10 +2,10 @@
 
 require "spec_helper"
 
-RSpec.describe Castkit::Ext::DataObject::Serialization do
+RSpec.describe Castkit::DSL::DataObject::Serialization do
   let(:klass) do
     Class.new do
-      include Castkit::Ext::DataObject::Serialization
+      include Castkit::DSL::DataObject::Serialization
     end
   end
 

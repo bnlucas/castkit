@@ -1,46 +1,103 @@
 # frozen_string_literal: true
 
+require_relative "castkit"
 require_relative "error"
-require_relative "ext/attribute/options"
-require_relative "ext/attribute/access"
-require_relative "ext/attribute/validation"
+require_relative "attributes/options"
+require_relative "dsl/attribute"
 
 module Castkit
-  # Represents a typed attribute on a Castkit::DataObject.
+  # Represents a typed attribute on a `Castkit::DataObject`.
   #
-  # Provides casting, validation, access control, and serialization behavior.
+  # This class is responsible for:
+  # - Type normalization (symbol, class, or data object)
+  # - Default and option resolution
+  # - Validation hooks
+  # - Access and serialization control
+  #
+  # Attributes are created automatically when using the DSL in `DataObject`, but
+  # can also be created manually or through reusable definitions.
+  #
+  # @see Castkit::Attributes::Definition
+  # @see Castkit::DSL::Attribute::Options
+  # @see Castkit::DSL::Attribute::Access
+  # @see Castkit::DSL::Attribute::Validation
   class Attribute
-    include Castkit::Ext::Attribute::Options
-    include Castkit::Ext::Attribute::Access
-    include Castkit::Ext::Attribute::Validation
+    include Castkit::DSL::Attribute
+
+    class << self
+      # Defines a reusable attribute definition via a DSL wrapper.
+      #
+      # @param type [Symbol, Class] The base type to define.
+      # @param options [Hash] Additional attribute options.
+      # @yield The block to configure options or transformations.
+      # @return [Array<(Symbol, Hash)>] a tuple of the final type and options hash
+      def define(type, **options, &block)
+        normalized_type = normalize_type(type)
+        Castkit::Attributes::Definition.define(normalized_type, **options, &block)
+      end
+
+      # Normalizes a declared type (symbol, class, or array) for internal usage.
+      #
+      # @param type [Symbol, Class, Array] the input type
+      # @return [Symbol, Class<Castkit::DataObject>] the normalized form
+      def normalize_type(type)
+        return type.map { |t| normalize_type(t) } if type.is_a?(Array)
+        return type if Castkit.dataobject?(type)
+
+        process_type(type).to_sym
+      end
+
+      # Converts a raw type into a normalized symbol.
+      #
+      # Recognized forms:
+      # - `TrueClass`/`FalseClass` → `:boolean`
+      # - Class → `class.name.downcase.to_sym`
+      # - Symbol → passed through
+      #
+      # @param type [Symbol, Class] the type to convert
+      # @return [Symbol] normalized type symbol
+      # @raise [Castkit::AttributeError] if the type is invalid
+      def process_type(type)
+        case type
+        when Class
+          return :boolean if [TrueClass, FalseClass].include?(type)
+
+          type.name.downcase.to_sym
+        when Symbol
+          type
+        else
+          raise Castkit::AttributeError, "Unknown type: #{type.inspect}"
+        end
+      end
+    end
 
     # @return [Symbol] the attribute name
     attr_reader :field
 
-    # @return [Symbol, Class, Array] the declared type (normalized)
+    # @return [Symbol, Class, Array] the declared or normalized type
     attr_reader :type
 
-    # @return [Hash] attribute options (including aliases, default, access, etc.)
+    # @return [Hash] full option hash, including merged defaults
     attr_reader :options
 
     # Initializes a new attribute definition.
     #
-    # @param field [Symbol] the name of the attribute
-    # @param type [Symbol, Class, Array] the type or array of types
-    # @param default [Object, Proc] optional default value
-    # @param options [Hash] additional configuration options
+    # @param field [Symbol] the attribute name
+    # @param type [Symbol, Class, Array<Symbol, Class>] the type (or list of types)
+    # @param default [Object, Proc, nil] optional static or callable default
+    # @param options [Hash] additional attribute options
     def initialize(field, type, default: nil, **options)
       @field = field
-      @type = normalize_type(type)
+      @type = self.class.normalize_type(type)
       @default = default
       @options = populate_options(options)
 
       validate!
     end
 
-    # Returns a hash representation of the attribute definition.
+    # Converts the attribute definition to a serializable hash.
     #
-    # @return [Hash]
+    # @return [Hash] the full attribute metadata
     def to_hash
       {
         field: field,
@@ -55,56 +112,22 @@ module Castkit
 
     private
 
-    # Populates default values and normalizes internal options.
+    # Populates default values and prepares internal options.
     #
-    # @param options [Hash]
-    # @return [Hash]
+    # @param options [Hash] the user-provided options
+    # @return [Hash] the merged and normalized options
     def populate_options(options)
-      options = DEFAULT_OPTIONS.merge(options)
+      options = Castkit::Attributes::Options::DEFAULTS.merge(options)
       options[:aliases] = Array(options[:aliases] || [])
-      options[:of] = normalize_type(options[:of]) if options[:of]
+      options[:of] = self.class.normalize_type(options[:of]) if options[:of]
 
       options
     end
 
-    # Normalizes a declared type to a symbol or class reference.
+    # Raises a standardized attribute error with context.
     #
-    # @param type [Symbol, Class, Array]
-    # @return [Symbol, Class, Array]
-    # @raise [Castkit::AttributeError] if the type is not valid
-    def normalize_type(type)
-      return type.map { |t| normalize_type(t) } if type.is_a?(Array)
-      return type if Castkit.dataobject?(type)
-
-      process_type(type)
-    end
-
-    # Converts a single type value into a normalized internal representation.
-    #
-    # - Maps `TrueClass`/`FalseClass` to `:boolean`
-    # - Converts class names (e.g., `String`, `Integer`) to lowercase symbols
-    # - Accepts already-symbolized types (e.g., `:string`)
-    #
-    # @param type [Class, Symbol] the declared type to process
-    # @return [Symbol] the normalized type
-    # @raise [Castkit::AttributeError] if the type is not a recognized form
-    def process_type(type)
-      case type
-      when Class
-        return :boolean if [TrueClass, FalseClass].include?(type)
-
-        type.name.downcase.to_sym
-      when Symbol
-        type
-      else
-        raise_error!("Unknown type: #{type.inspect}")
-      end
-    end
-
-    # Raises a Castkit::AttributeError with optional context.
-    #
-    # @param message [String]
-    # @param context [Hash, nil]
+    # @param message [String] the error message
+    # @param context [Hash, nil] optional override for context payload
     # @raise [Castkit::AttributeError]
     def raise_error!(message, context: nil)
       raise Castkit::AttributeError.new(message, context: context || to_h)

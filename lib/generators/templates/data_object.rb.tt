@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "castkit/data_object"
+
 module Castkit
   module DataObjects
     # Data transfer object for <%= config[:class_name] %>.

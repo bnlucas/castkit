@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Castkit
-  module Ext
+  module DSL
     module Attribute
       # Provides centralized handling of attribute casting and validation errors.
       #

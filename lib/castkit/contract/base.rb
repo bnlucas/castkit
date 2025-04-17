@@ -2,7 +2,6 @@
 
 require_relative "../core/config"
 require_relative "../core/attribute_types"
-require_relative "../core/registerable"
 require_relative "result"
 
 module Castkit
@@ -33,23 +32,12 @@ module Castkit
     class Base
       extend Castkit::Core::Config
       extend Castkit::Core::AttributeTypes
-      extend Castkit::Core::Registerable
 
       ATTRIBUTE_OPTIONS = %i[
         required aliases min max format of validator unwrapped prefix force_type
       ].freeze
 
       class << self
-        # Registers the current class under `Castkit::Contracts`.
-        #
-        # @param as [String, Symbol, nil] The constant name to use (PascalCase). Defaults to the name used when building
-        #   the contract. If no name was provided, an error is raised.
-        # @return [Class] the registered contract class
-        # @raise [Castkit::Error] If a name cannot be resolved.
-        def register!(as: nil)
-          super(namespace: :contracts, as: as || definition[:name])
-        end
-
         # Defines an attribute for the contract.
         #
         # Only a subset of options is allowed inside a contract.

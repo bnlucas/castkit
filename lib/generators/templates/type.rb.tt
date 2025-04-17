@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "castkit/types/base"
+
 module Castkit
   module Types
     # Type definition for <%= config[:class_name] %> (:<%= config[:name] %>) attributes.

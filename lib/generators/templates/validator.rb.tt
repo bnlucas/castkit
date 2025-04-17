@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "base"
+require "castkit/validators/base"
 
 module Castkit
   module Validators
