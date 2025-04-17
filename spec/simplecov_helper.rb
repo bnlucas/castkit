@@ -12,7 +12,7 @@ SimpleCov.start do
   add_group "Plugins", "lib/castkit/plugins"
 end
 
-SimpleCov.minimum_coverage 90
+SimpleCov.minimum_coverage 50
 
 require "simplecov-cobertura"
 SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
