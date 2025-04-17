@@ -6,15 +6,8 @@ require "castkit/data_object"
 require "castkit/validator"
 
 RSpec.describe Castkit::Attribute do
-  let(:dummy_validator) do
-    Class.new(Castkit::Validator) do
-      def call(value, **_options)
-        raise Castkit::AttributeError, "invalid" if value == :invalid
-      end
-    end
-  end
-
   subject(:instance) { described_class.new(:foo, type, **options) }
+
   let(:options) { {} }
   let(:type) { :string }
 
