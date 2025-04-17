@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
 require "castkit"
-require "simplecov"
-SimpleCov.start
-
-require "simplecov-cobertura"
-SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
+require_relative "simplecov_helper"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
