@@ -4,7 +4,7 @@ require "castkit"
 require "simplecov"
 SimpleCov.start
 
-require 'simplecov-cobertura'
+require "simplecov-cobertura"
 SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
 
 RSpec.configure do |config|
