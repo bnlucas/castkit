@@ -1,19 +1,30 @@
 # frozen_string_literal: true
 
-require_relative "../../data_object"
-
 module Castkit
   module DSL
-    module Attribute
-      # Provides access to normalized attribute options and helper predicates.
+    module Attributes
+      # Provides a DSL for configuring attribute options within an attribute definition.
       #
-      # These methods support Castkit attribute behavior such as default values,
-      # key mapping, optionality, and structural roles (e.g. composite or unwrapped).
+      # This module is designed to be extended by class-level definition objects such as
+      # `Castkit::Attributes::Definition`, and is used to build reusable sets of options
+      # for attributes declared within `Castkit::DataObject` classes.
+      #
+      # @example
+      #   class OptionalString < Castkit::Attributes::Definition
+      #     type :string
+      #     required false
+      #     ignore_blank true
+      #   end
       module Options
-        # Default options for attributes.
+        # Valid access modes for an attribute.
+        #
+        # @return [Array<Symbol>]
+        ACCESS_MODES = %i[read write].freeze
+
+        # Default configuration for attribute options.
         #
         # @return [Hash{Symbol => Object}]
-        DEFAULT_OPTIONS = {
+        DEFAULTS = {
           required: true,
           ignore_nil: false,
           ignore_blank: false,
@@ -22,119 +33,182 @@ module Castkit
           transient: false,
           unwrapped: false,
           prefix: nil,
-          access: %i[read write],
-          force_type: !Castkit.configuration.enforce_typing
+          access: ACCESS_MODES,
+          force_type: false # TODO: Update to check config
         }.freeze
 
-        # Returns the default value for the attribute.
+        # Sets or retrieves the attribute type.
         #
-        # If the default is callable, it is invoked.
-        #
-        # @return [Object]
-        def default
-          val = @default
-          val.respond_to?(:call) ? val.call : val
+        # @param value [Symbol, nil] The type to assign (e.g., :string), or nil to fetch.
+        # @return [Symbol]
+        def type(value = nil)
+          value.nil? ? definition[:type] : (definition[:type] = value.to_sym)
         end
 
-        # Returns the serialization/deserialization key.
+        # Sets the element type for array attributes.
         #
-        # Falls back to the field name if `:key` is not specified.
-        #
-        # @return [Symbol, String]
-        def key
-          options[:key] || field
+        # @param value [Symbol, Class] the type of elements in the array
+        # @return [void]
+        def of(value)
+          return unless @type == :array
+
+          set_option(:of, value)
         end
 
-        # Returns the key path for accessing nested keys.
+        # Sets the default value or proc for the attribute.
         #
-        # Optionally includes alias key paths if `with_aliases` is true.
-        #
-        # @param with_aliases [Boolean]
-        # @return [Array<Array<Symbol>>] nested key paths
-        def key_path(with_aliases: false)
-          path = key.to_s.split(".").map(&:to_sym) || []
-          return path unless with_aliases
-
-          [path] + alias_paths
+        # @param value [Object, Proc] the default value or lambda
+        # @return [void]
+        def default(value = nil)
+          set_option(:default, value)
         end
 
-        # Returns all alias key paths as arrays of symbols.
+        # Enables or disables forced typecasting, or sets a custom flag.
         #
-        # @return [Array<Array<Symbol>>]
-        def alias_paths
-          options[:aliases].map { |a| a.to_s.split(".").map(&:to_sym) }
+        # @param value [Boolean, nil] the forced type flag
+        # @return [void]
+        def force_type(value = nil)
+          set_option(:force_type, value || !Castkit.configuration.enforce_typing)
         end
 
-        # Whether the attribute is required for object construction.
+        # Marks the attribute as required or optional.
         #
-        # @return [Boolean]
-        def required?
-          options[:required]
+        # @param value [Boolean]
+        # @return [void]
+        def required(value = nil)
+          set_option(:required, value || true)
         end
 
-        # Whether the attribute is optional.
+        # Marks the attribute to be ignored entirely.
         #
-        # @return [Boolean]
-        def optional?
-          !required?
+        # @param value [Boolean]
+        # @return [void]
+        def ignore(value = nil)
+          set_option(:ignore, value || true)
         end
 
-        # Whether to ignore `nil` values during serialization.
+        # Ignores `nil` values during serialization or persistence.
         #
-        # @return [Boolean]
-        def ignore_nil?
-          options[:ignore_nil]
+        # @param value [Boolean]
+        # @return [void]
+        def ignore_nil(value = nil)
+          set_option(:ignore_nil, value || true)
         end
 
-        # Whether to ignore blank values (`[]`, `{}`, empty strings) during serialization.
+        # Ignores blank values (`""`, `[]`, `{}`) during serialization.
         #
-        # @return [Boolean]
-        def ignore_blank?
-          options[:ignore_blank]
+        # @param value [Boolean]
+        # @return [void]
+        def ignore_blank(value = nil)
+          set_option(:ignore_blank, value || true)
         end
 
-        # Whether the attribute is a nested Castkit::DataObject.
+        # Adds a prefix for unwrapped attribute keys.
         #
-        # @return [Boolean]
-        def dataobject?
-          Castkit.dataobject?(type)
+        # @param value [String, Symbol, nil]
+        # @return [void]
+        def prefix(value = nil)
+          set_option(:prefix, value)
         end
 
-        # Whether the attribute is a collection of Castkit::DataObjects.
+        # Marks the attribute as unwrapped (inline merging of nested fields).
         #
-        # @return [Boolean]
-        def dataobject_collection?
-          type == :array && Castkit.dataobject?(options[:of])
+        # @param value [Boolean]
+        # @return [void]
+        def unwrapped(value = nil)
+          set_option(:unwrapped, value || true)
         end
 
-        # Whether the attribute is considered composite.
+        # Sets access modes for the attribute.
         #
-        # @return [Boolean]
-        def composite?
-          options[:composite]
+        # @param value [Array<Symbol>, Symbol] valid values: `:read`, `:write`, or both
+        # @return [void]
+        def access(value = nil)
+          value = validate_access_modes!(value)
+          set_option(:access, value)
         end
 
-        # Whether the attribute is considered transient (not exposed in serialized output).
+        # Shortcut to make the attribute readonly (`access: [:read]`).
         #
-        # @return [Boolean]
-        def transient?
-          options[:transient]
+        # @param value [Boolean]
+        # @return [void]
+        def readonly(value = nil)
+          value = value || true ? [:read] : ACCESS_MODES
+          set_option(:access, value)
         end
 
-        # Whether the attribute is unwrapped into the parent object.
+        # Marks the attribute as a composite (e.g., nested `DataObject`).
         #
-        # Only applies to Castkit::DataObject types.
-        #
-        # @return [Boolean]
-        def unwrapped?
-          dataobject? && options[:unwrapped]
+        # @param value [Boolean]
+        # @return [void]
+        def composite(value = nil)
+          set_option(:composite, value || true)
         end
 
-        # Returns the prefix used for unwrapped attributes.
+        # Marks the attribute as transient (not included in persistence or serialization).
         #
-        # @return [String, nil]
-        def prefix
-          options[:prefix]
+        # @param value [Boolean]
+        # @return [void]
+        def transient(value = nil)
+          set_option(:transient, value || true)
+        end
+
+        # Sets a format constraint (e.g., regex validation).
+        #
+        # @param value [Regexp]
+        # @return [void]
+        def format(value)
+          set_option(:format, value)
+        end
+
+        # Attaches a custom validator callable for this attribute.
+        #
+        # @param value [Proc, #call]
+        # @return [void]
+        def validator(value)
+          set_option(:validator, value)
+        end
+
+        private
+
+        # Converts class or symbol into a normalized type symbol.
+        #
+        # @param type [Class, Symbol]
+        # @return [Symbol]
+        # @raise [Castkit::AttributeError] if type cannot be resolved
+        def process_type(type)
+          case type
+          when Class
+            return :boolean if [TrueClass, FalseClass].include?(type)
+
+            type.name.downcase.to_sym
+          when Symbol
+            type
+          else
+            raise Castkit::AttributeError.new("Unknown type: #{type.inspect}", context: to_h)
+          end
+        end
+
+        # Sets an option key-value pair in the current definition.
+        #
+        # @param option [Symbol]
+        # @param value [Object, nil]
+        # @return [Object, nil]
+        def set_option(option, value)
+          value.nil? ? definition[:options][option] : (definition[:options][option] = value)
+        end
+
+        # Validates and normalizes access mode array.
+        #
+        # @param value [Array<Symbol>, Symbol, nil]
+        # @return [Array<Symbol>]
+        # @raise [Castkit::AttributeError] if invalid modes are present
+        def validate_access_modes!(value)
+          value_array = Array(value || ACCESS_MODES).compact
+          unknown_modes = value_array - ACCESS_MODES
+          return value_array if unknown_modes.empty?
+
+          raise Castkit::AttributeError.new("Unknown access flags: #{unknown_modes.inspect}", context: to_h)
         end
       end
     end

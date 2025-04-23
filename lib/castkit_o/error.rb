@@ -21,6 +21,12 @@ module Castkit
   # Raised for issues related to Castkit::DataObject initialization or usage.
   class DataObjectError < Error; end
 
+  class SerializerInheritanceError < Error
+    def initialize
+      super("Serializer must inherit from Castkit::Serializers::Base")
+    end
+  end
+
   # Raised for attribute validation, access, or casting failures.
   class AttributeError < Error
     # Returns the field name related to the error, if available.

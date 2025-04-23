@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "lib/castkit/version"
+require_relative "lib/castkit_o/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "castkit"
@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Runtime dependencies
+  spec.add_dependency "cattri", "~> 0.1", ">= 0.1.2"
   spec.add_dependency "thor"
 
   # Development dependencies
@@ -40,5 +41,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop"
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "simplecov-cobertura"
+  spec.add_development_dependency "simplecov-html"
   spec.add_development_dependency "yard"
 end

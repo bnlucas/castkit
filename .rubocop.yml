@@ -21,6 +21,9 @@ Gemspec/DevelopmentDependencies:
 Layout/LineLength:
   Max: 120
 
+Lint/MissingSuper:
+  Enabled: false
+
 Metrics/ClassLength:
   Max: 200
 

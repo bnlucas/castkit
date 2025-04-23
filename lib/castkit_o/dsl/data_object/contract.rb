@@ -27,15 +27,6 @@ module Castkit
       # This module is automatically extended by Castkit::DataObject and is not intended
       # to be included manually.
       module Contract
-        # Returns the associated Castkit::Contract for this DataObject.
-        #
-        # Memoizes the contract once it's built. Uses `to_contract` internally.
-        #
-        # @return [Class<Castkit::Contract::Definition>]
-        def contract
-          @contract ||= to_contract
-        end
-
         # Converts the current DataObject into a Castkit::Contract subclass.
         #
         # If the contract has already been defined, returns the existing definition.

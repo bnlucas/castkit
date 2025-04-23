@@ -1,9 +1,5 @@
 # frozen_string_literal: true
 
 module Castkit
-  module DSL
-    module DataObject
-
-    end
-  end
+  VERSION = "0.3.1-alpha"
 end
