@@ -1,150 +1,42 @@
 # frozen_string_literal: true
 
-require "json"
-require_relative "error"
-require_relative "attribute"
-require_relative "serializers/default_serializer"
-require_relative "contract/validator"
-require_relative "dsl/data_object"
+require "set"
+require_relative "dsl/abstract_class"
 
 module Castkit
-  # Base class for defining declarative, typed data transfer objects (DTOs).
-  #
-  # Includes typecasting, validation, access control, serialization, deserialization,
-  # and support for custom serializers.
-  #
-  # @example Defining a DTO
-  #   class UserDto < Castkit::DataObject
-  #     string :name
-  #     integer :age, required: false
-  #   end
-  #
-  # @example Instantiating and serializing
-  #   user = UserDto.new(name: "Alice", age: 30)
-  #   user.to_json #=> '{"name":"Alice","age":30}'
-  class DataObject
-    include Castkit::DSL::DataObject
+  class DataObjects < Castkit::DSL::AbstractClass
+    cattr :contract, default: -> { to_contract }
+    cattr :root do
+      ->(value) { value.to_s.strip.to_sym }
+    end
+    cattr :ignore_nil, default: false
+    cattr :ignore_blank, default: false
+    cattr :enabled_plugins, default: Set.new
+    cattr :disabled_plugins, default: Set.new
+    cattr :serializer do |klass|
+      raise Castkit::SerializerInheritanceError unless klass < Castkit::Serializers::Base
 
-    class << self
-      def build(&block)
-        klass = Class.new(self)
-        klass.class_eval(&block) if block_given?
-
-        klass
-      end
-
-      # Gets or sets the serializer class to use for instances of this object.
-      #
-      # @param value [Class<Castkit::Serializers::Base>, nil]
-      # @return [Class<Castkit::Serializers::Base>, nil]
-      # @raise [ArgumentError] if value does not inherit from Castkit::Serializers::Base
-      def serializer(value = nil)
-        if value
-          unless value < Castkit::Serializers::Base
-            raise ArgumentError, "Serializer must inherit from Castkit::Serializers::Base"
-          end
-
-          @serializer = value
-        else
-          @serializer
-        end
-      end
-
-      # Casts a value into an instance of this class.
-      #
-      # @param obj [self, Hash]
-      # @return [self]
-      # @raise [Castkit::DataObjectError] if obj is not castable
-      def cast(obj)
-        case obj
-        when self
-          obj
-        when Hash
-          from_h(obj)
-        else
-          raise Castkit::DataObjectError, "Can't cast #{obj.class} to #{name}"
-        end
-      end
-
-      # Converts an object to its JSON representation.
-      #
-      # @param obj [Castkit::DataObject]
-      # @return [String]
-      def dump(obj)
-        obj.to_json
-      end
+      klass
+    end
+    cattr :__raw, default: {} do |data|
+      data.dup.freeze
+    end
+    cattr :unknown_attributes, default: {} do |data|
+      data.reject { |k, _v| k == attributes.key?(k.to_sym) }.freeze
     end
 
-    # @return [Hash{Symbol => Object}] The raw data provided during instantiation.
-    attr_reader :__raw
-
-    # @return [Hash{Symbol => Object}] Undefined attributes provided during instantiation.
-    attr_reader :unknown_attributes
-
-    # Initializes the DTO from a hash of attributes.
-    #
-    # @param data [Hash] raw input hash
-    # @raise [Castkit::DataObjectError] if strict mode is enabled and unknown keys are present
-    def initialize(data = {})
-      @__raw = data.dup.freeze
-      data = unwrap_root(data)
-
-      @unknown_attributes = data.reject { |key, _| self.class.attributes.key?(key.to_sym) }.freeze
-
-      validate_data!(data)
-      deserialize_attributes!(data)
-    end
-
-    # Serializes the DTO to a Ruby hash.
-    #
-    # @param visited [Set, nil] used to track circular references
-    # @return [Hash]
-    def to_hash(visited: nil)
-      serializer.call(self, visited: visited)
-    end
-
-    # Serializes the DTO to a JSON string.
-    #
-    # @param options [Hash, nil] options passed to `JSON.generate`
-    # @return [String]
-    def to_json(options = nil)
-      JSON.generate(serializer.call(self), options)
-    end
-
-    # @!method to_h
-    #   Alias for {#to_hash}
-    #
-    # @!method serialize
-    #   Alias for {#to_hash}
-    alias to_h to_hash
-    alias serialize to_hash
-
-    private
-
-    # Helper method to call Castkit::Contract::Validator on the provided input data.
-    #
-    # @param data [Hash]
-    # @raise [Castkit::ContractError]
-    def validate_data!(data)
-      Castkit::Contract::Validator.call!(
-        self.class.attributes.values,
-        data,
-        **self.class.validation_rules
-      )
-    end
-
-    # Returns the serializer instance or default for this object.
-    #
-    # @return [Class<Castkit::Serializers::Base>]
-    def serializer
-      @serializer ||= self.class.serializer || Castkit::Serializers::DefaultSerializer
-    end
-
-    # Returns false if self.class.allow_unknown == true, otherwise the value of self.class.strict.
-    #
+    # @param value [Boolean]
     # @return [Boolean]
-    def strict?
-      self.class.allow_unknown ? false : !!self.class.strict
+    define_proxy :tester
+
+    def define_proxy(method)
+      define_singleton_method(name) do |value = nil|
+        definition.public_send(name, value)
+      end
     end
   end
+end
+
+class Test < DataObject
+  tester true
 end

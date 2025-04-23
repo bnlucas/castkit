@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
+require "cattri"
+
 module Castkit
   module DSL
-    module DataObject
-
+    class AbstractClass
+      include Cattri
     end
   end
 end

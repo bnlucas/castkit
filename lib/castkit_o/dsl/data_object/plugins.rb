@@ -18,20 +18,6 @@ module Castkit
       #   end
       #
       module Plugins
-        # Returns the set of plugins explicitly enabled on the class.
-        #
-        # @return [Set<Symbol>] enabled plugin names
-        def enabled_plugins
-          @enabled_plugins ||= Set.new
-        end
-
-        # Returns the set of default plugins explicitly disabled on the class.
-        #
-        # @return [Set<Symbol>] disabled plugin names
-        def disabled_plugins
-          @disabled_plugins ||= Set.new
-        end
-
         # Enables one or more plugins on the calling class.
         #
         # @param plugins [Array<Symbol>] plugin identifiers (e.g., :oj, :yaml)
@@ -39,9 +25,7 @@ module Castkit
         def enable_plugins(*plugins)
           return if plugins.empty?
 
-          @enabled_plugins ||= Set.new
-          @enabled_plugins.merge(plugins)
-
+          enabled_plugins.merge(plugins)
           Castkit::Plugins.activate(self, *plugins)
         end
 
@@ -61,8 +45,7 @@ module Castkit
         def disable_plugins(*plugins)
           return if plugins.empty?
 
-          @disabled_plugins ||= Set.new
-          @disabled_plugins.merge(plugins)
+          disabled_plugins.merge(plugins)
         end
 
         # Hook that is called when a DataObject subclass is created.
@@ -75,9 +58,7 @@ module Castkit
         def inherited(subclass)
           super
 
-          disabled = instance_variable_get(:@disabled_plugins) || Set.new
-          plugins = Castkit.configuration.default_plugins - disabled.to_a
-
+          plugins = Castkit.configuration.default_plugins - disabled_plugins.to_a
           subclass.enable_plugins(*plugins)
         end
       end
