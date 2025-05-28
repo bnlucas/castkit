@@ -364,7 +364,7 @@ UserDto.deserialize(hash)
 
 ```ruby
 contract = UserDto.to_contract
-UserDto.validate!(id: "123", name: "Alice")
+contract.validate!(id: "123", name: "Alice")
 
 from_contract = Castkit::DataObject.from_contract(contract)
 ```
