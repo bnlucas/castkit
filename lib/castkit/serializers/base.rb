@@ -15,7 +15,7 @@ module Castkit
     #     private
     #
     #     def call
-    #       { type: object.class.name, data: object.to_h }
+    #       { type: object.class.name, data: {stuff: object.stuff} }
     #     end
     #   end
     #
