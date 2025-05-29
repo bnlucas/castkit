@@ -16,7 +16,7 @@ module Castkit
     #   validator.call("true", _options: {}, context: :enabled) # => true
     #   validator.call("0", _options: {}, context: :enabled)    # => false
     #   validator.call("nope", _options: {}, context: :enabled) # raises Castkit::AttributeError
-    class BooleanValidator
+    class BooleanValidator < Castkit::Validators::Base
       # Validates the Boolean value.
       #
       # @param value [Object] the input to validate
