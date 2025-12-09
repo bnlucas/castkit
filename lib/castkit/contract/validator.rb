@@ -188,7 +188,11 @@ module Castkit
       # @return [Object, nil]
       def resolve_input_value(input, attribute)
         attribute.key_path(with_aliases: true).each do |path|
-          value = path.reduce(input) { |memo, key| memo.is_a?(Hash) ? memo[key] : nil }
+          value = path.reduce(input) do |memo, key|
+            next memo unless memo.is_a?(Hash)
+
+            memo.key?(key) ? memo[key] : memo[key.to_s]
+          end
           return value unless value.nil?
         end
 

@@ -159,6 +159,17 @@ RSpec.describe Castkit::DataObject do
         filtered_sorted.new(sort: "auto")
       end.not_to raise_error
     end
+
+    it "accepts camelCase string keys from JSON input" do
+      dto = Class.new(described_class) do
+        string :logoColor
+      end
+
+      input = { "logoColor" => "blue" }
+
+      expect { dto.new(input) }.not_to raise_error
+      expect(dto.new(input).logoColor).to eq("blue")
+    end
   end
 
   describe "#__raw" do
