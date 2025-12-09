@@ -154,6 +154,11 @@ example_id                                                    | status | run_tim
 ./spec/castkit/ext/data_object/serialization_spec.rb[1:3:1]   | passed | 0.00004 seconds |
 ./spec/castkit/ext/data_object/serialization_spec.rb[1:4:1]   | passed | 0.00003 seconds |
 ./spec/castkit/ext/data_object/serialization_spec.rb[1:4:2]   | passed | 0.00003 seconds |
+./spec/castkit/validators/boolean_validator_spec.rb[1:1:1]    | passed | 0.00054 seconds |
+./spec/castkit/validators/boolean_validator_spec.rb[1:1:2]    | passed | 0.00004 seconds |
+./spec/castkit/validators/boolean_validator_spec.rb[1:1:3]    | passed | 0.00003 seconds |
+./spec/castkit/validators/boolean_validator_spec.rb[1:1:4]    | passed | 0.00068 seconds |
+./spec/castkit/validators/boolean_validator_spec.rb[1:2:1]    | passed | 0.00004 seconds |
 ./spec/castkit/validators/numeric_validator_spec.rb[1:1:1:1]  | passed | 0.00005 seconds |
 ./spec/castkit/validators/numeric_validator_spec.rb[1:1:2:1]  | passed | 0.00009 seconds |
 ./spec/castkit/validators/numeric_validator_spec.rb[1:1:3:1]  | passed | 0.00003 seconds |

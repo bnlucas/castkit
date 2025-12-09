@@ -16,15 +16,15 @@ module Castkit
     #   validator.call("true", _options: {}, context: :enabled) # => true
     #   validator.call("0", _options: {}, context: :enabled)    # => false
     #   validator.call("nope", _options: {}, context: :enabled) # raises Castkit::AttributeError
-    class BooleanValidator
+    class BooleanValidator < Castkit::Validators::Base
       # Validates the Boolean value.
       #
       # @param value [Object] the input to validate
-      # @param _options [Hash] unused, provided for consistency with other validators
+      # @param options [Hash] unused, provided for consistency with other validators
       # @param context [Symbol, String] the attribute name or path for error messages
       # @return [Boolean]
       # @raise [Castkit::AttributeError] if the value is not a recognizable boolean
-      def call(value, _options:, context:)
+      def call(value, options:, context:) # rubocop:disable Lint/UnusedMethodArgument
         case value.to_s.downcase
         when "true", "1"
           true
