@@ -109,6 +109,7 @@ module Castkit
 end
 
 require_relative "configuration"
+require_relative "plugins"
 require_relative "inflector"
 require_relative "version"
 require_relative "attribute"
