@@ -24,18 +24,19 @@ module Castkit
         # @param options [Hash] options passed to `validate!`, e.g., `min`, `max`, `force_type`
         # @param context [Symbol, String, nil] context label for error messages
         # @return [Object] the deserialized and validated value
-        def cast!(value, validator: nil, options: {}, context: {})
+        def cast!(value, validator: nil, options: {}, context: {}, **extra_options)
+          options = options.merge(extra_options)
           instance = new
           validator ||= options.delete(:validator)
           validator ||= default_validator(instance)
 
           if options[:force_type]
             deserialized_value = instance.deserialize(value)
-            validator.call(deserialized_value, options: options, context: context)
+            invoke_validator(validator, deserialized_value, options: options, context: context)
             return deserialized_value
           end
 
-          validator.call(value, options: options, context: context)
+          invoke_validator(validator, value, options: options, context: context)
           instance.deserialize(value)
         end
 
@@ -74,6 +75,26 @@ module Castkit
         def default_validator(instance)
           lambda do |value, options: {}, context: nil|
             instance.validate!(value, options: options, context: context)
+          end
+        end
+
+        # Dispatches validation to support callable validators with different arities.
+        #
+        # @param validator [#call, Proc] the validator to invoke
+        # @param value [Object] the value being validated
+        # @param options [Hash] validation options
+        # @param context [Symbol, String, nil] context for error messages
+        # @return [void]
+        def invoke_validator(validator, value, options:, context:)
+          return validator.call(value, options: options, context: context) unless validator.is_a?(Proc)
+
+          case validator.arity
+          when 1
+            validator.call(value)
+          when 2
+            validator.call(value, options)
+          else
+            validator.call(value, options: options, context: context)
           end
         end
       end
