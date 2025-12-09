@@ -100,6 +100,13 @@ module Castkit
         @attributes ||= {}
       end
 
+      def inherited(subclass)
+        super
+
+        parent_attributes = instance_variable_get(:@attributes)
+        subclass.instance_variable_set(:@attributes, parent_attributes.dup) if parent_attributes
+      end
+
       # Alias for {#attribute}
       #
       # @see #attribute

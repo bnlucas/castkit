@@ -141,6 +141,24 @@ RSpec.describe Castkit::DataObject do
 
       expect { subclass.new(valid_input.merge(extra: 1)) }.not_to raise_error
     end
+
+    it "accepts attributes defined on a parent class" do
+      sorted_query = Class.new(described_class) do
+        optional do
+          string :sort
+        end
+      end
+
+      filtered_sorted = Class.new(sorted_query) do
+        optional do
+          string :filter
+        end
+      end
+
+      expect do
+        filtered_sorted.new(sort: "auto")
+      end.not_to raise_error
+    end
   end
 
   describe "#__raw" do
