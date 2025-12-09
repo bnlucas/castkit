@@ -23,7 +23,11 @@ RSpec.describe Castkit::Plugins do
   end
 
   it "looks up plugins defined under Castkit::Plugins namespace" do
-    module Castkit::Plugins::SamplePlugin; end
+    module Castkit
+      module Plugins
+        module SamplePlugin; end
+      end
+    end
 
     expect(Castkit::Plugins.lookup!(:sample_plugin)).to eq(Castkit::Plugins::SamplePlugin)
   end
