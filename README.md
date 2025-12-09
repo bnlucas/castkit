@@ -215,7 +215,7 @@ class Metadata < Castkit::DataObject
 end
 
 class PageDto < Castkit::DataObject
-  dataobject :metadata, unwrapped: true, prefix: "meta"
+  dataobject :metadata, Metadata, unwrapped: true, prefix: "meta"
 end
 
 # Serializes as:
@@ -523,7 +523,7 @@ end
 
 class UserDto < Castkit::DataObject
   string :id
-  dataobject :address, of: AddressDto
+  dataobject :address, AddressDto
 end
 
 UserContract = Castkit::Contract.from_dataobject(UserDto)
