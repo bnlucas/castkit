@@ -80,8 +80,12 @@ RSpec.describe Castkit::Core::AttributeTypes do
       %i[f array],
       %i[g hash]
     )
-    h_entries = recorded.slice(:h)
-    expect(h_entries.size).to eq(2)
-    expect(h_entries).to all(satisfy { |_, type| type == dataobject_type })
+
+    entries = recorded.each_with_object(Hash.new { |hash, key| hash[key] = [] }) do |(field, type), memo|
+      memo[field] << type
+    end
+
+    expect(entries[:h].size).to eq(2)
+    expect(entries[:h]).to all(eq(dataobject_type))
   end
 end
