@@ -3,8 +3,10 @@
 module Castkit
   # Base error class for all Castkit-related exceptions.
   class Error < StandardError
+    include Cattri
+
     # @return [Hash, Object, nil] contextual data to aid in debugging
-    attr_reader :context
+    cattri :context, nil, expose: :read
 
     # Initializes a Castkit error.
     #
@@ -12,7 +14,8 @@ module Castkit
     # @param context [Object, String, nil] optional data object or hash for context
     def initialize(msg, context: nil)
       super(msg)
-      @context = context
+
+      cattri_variable_set(:context, context, final: true)
     end
   end
 
@@ -44,11 +47,12 @@ module Castkit
 
   # Raised during contract validation.
   class ContractError < Error
-    attr_reader :errors
+    cattri :errors, {}, expose: :read
 
     def initialize(msg, context: nil, errors: nil)
       super(msg, context: context)
-      @errors = errors || {}
+
+      cattri_variable_set(:errors, errors || {})
     end
   end
 end

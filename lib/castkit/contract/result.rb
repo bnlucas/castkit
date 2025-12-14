@@ -7,14 +7,16 @@ module Castkit
     # Provides access to the validation outcome, including whether it succeeded or failed,
     # and includes the full list of errors if any.
     class Result
+      include Cattri
+
       # @return [Symbol] the name of the contract
-      attr_reader :contract
+      cattri :contract, nil, expose: :read
 
       # @return [Hash{Symbol => Object}] the validated input
-      attr_reader :input
+      cattri :input, nil, expose: :read
 
       # @return [Hash{Symbol => Object}] the validation error hash
-      attr_reader :errors
+      cattri :errors, {}, expose: :read
 
       # Initializes a new result object.
       #
@@ -22,9 +24,11 @@ module Castkit
       # @param input [Hash{Symbol => Object}] the validated input
       # @param errors [Hash{Symbol => Object}] the validation errors
       def initialize(contract, input, errors: {})
-        @contract = contract.to_sym.freeze
-        @input = input.freeze
-        @errors = errors.freeze
+        super()
+
+        cattri_variable_set(:contract, contract.to_sym.freeze)
+        cattri_variable_set(:input, input.freeze)
+        cattri_variable_set(:errors, errors.freeze)
       end
 
       # A debug-friendly representation of the validation result.

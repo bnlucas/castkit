@@ -53,6 +53,39 @@ RSpec.describe Castkit::DataObject do
   end
 
   describe ".cast" do
+    it "returns self if already a DataObject" do
+      instance = subclass.new(valid_input)
+      expect(subclass.cast(instance)).to equal(instance)
+    end
+
+    it "raises for unsupported types" do
+      expect { subclass.cast("nope") }.to raise_error(Castkit::DataObjectError)
+    end
+  end
+
+  describe ".build" do
+    it "builds a subclass even without a block" do
+      built = described_class.build
+      expect(built).to be < described_class
+    end
+  end
+
+  describe ".serializer" do
+    it "allows overriding serializer" do
+      custom = Class.new(Castkit::Serializers::Base) do
+        def call
+          { custom: object.__raw }
+        end
+      end
+
+      subclass.serializer(custom)
+      instance = subclass.new(valid_input)
+
+      expect(instance.to_hash).to eq(custom: instance.__raw)
+    end
+  end
+
+  describe ".cast" do
     it "returns the object if it's already an instance" do
       instance = subclass.new(valid_input)
       expect(subclass.cast(instance)).to be(instance)
@@ -64,6 +97,13 @@ RSpec.describe Castkit::DataObject do
 
     it "raises for unsupported types" do
       expect { subclass.cast("oops") }.to raise_error(Castkit::DataObjectError)
+    end
+  end
+
+  describe ".build" do
+    it "builds a subclass even without a block" do
+      built = described_class.build
+      expect(built.superclass).to eq(described_class)
     end
   end
 
@@ -172,6 +212,16 @@ RSpec.describe Castkit::DataObject do
     end
   end
 
+  describe "#strict?" do
+    it "returns false when allow_unknown is true" do
+      klass = Class.new(described_class) do
+        allow_unknown true
+      end
+
+      expect(klass.new({}).send(:strict?)).to be(false)
+    end
+  end
+
   describe "#__raw" do
     it "returns the raw data on instantiation" do
       subclass.root :person
@@ -211,6 +261,83 @@ RSpec.describe Castkit::DataObject do
       instance = subclass.new(valid_input)
       json = instance.to_json
       expect(JSON.parse(json)).to eq({ "name" => "Tester", "age" => 30 })
+    end
+  end
+
+  describe "introspection (Cattri opt-in)" do
+    let(:introspective_klass) do
+      Class.new(described_class) do
+        enable_cattri_introspection!
+        string :name
+        string :email, required: false
+      end
+    end
+
+    it "exposes introspection helpers when enabled" do
+      expect(introspective_klass).to respond_to(:attribute_defined?)
+      expect(introspective_klass.attribute_defined?(:name)).to be(true)
+      expect(introspective_klass.attribute_methods[:name]).to include(:name, :name=)
+      expect(introspective_klass.attribute_source(:name)).to eq(introspective_klass)
+      expect(introspective_klass.attribute_definitions[:name]).to be_a(Cattri::Attribute)
+    end
+
+    it "memoizes the cattri attribute registry" do
+      registry = double("Registry",
+                        defined_attributes: { name: double(allowed_methods: %i[name name=],
+                                                           defined_in: introspective_klass) })
+
+      allow(introspective_klass).to receive(:attribute_registry).and_return(registry)
+      introspective_klass.attribute_methods
+
+      expect(introspective_klass).not_to receive(:attribute_registry)
+      introspective_klass.attribute_methods
+    end
+  end
+
+  describe "deserialization failures" do
+    it "raises when value cannot be cast to any union type" do
+      failing_type = Class.new(Castkit::Types::Base) do
+        def deserialize(_value)
+          raise Castkit::TypeError, "nope"
+        end
+      end
+
+      begin
+        Castkit.configuration.register_type(:failing_union, failing_type, override: true)
+        attribute = Castkit::Attribute.new(:status, [:failing_union])
+        instance = subclass.allocate
+
+        expect do
+          instance.send(:deserialize_primitive_value!, attribute, "nope")
+        end.to raise_error(Castkit::AttributeError, /could not be deserialized/)
+      ensure
+        Castkit.configuration.reset_types!
+      end
+    end
+
+    it "treats allow_unknown as overriding strict? on the instance" do
+      relaxed = Class.new(described_class) do
+        allow_unknown true
+      end
+
+      expect(relaxed.new(valid_input).send(:strict?)).to be(false)
+    end
+
+    it "respects explicit strict flag when allow_unknown is false" do
+      strict_class = Class.new(described_class) do
+        strict true
+        string :name
+        integer :age
+      end
+
+      relaxed_class = Class.new(described_class) do
+        strict false
+        string :name
+        integer :age
+      end
+
+      expect(strict_class.new(name: "x", age: 1).send(:strict?)).to be(true)
+      expect(relaxed_class.new(name: "x", age: 1).send(:strict?)).to be(false)
     end
   end
 end

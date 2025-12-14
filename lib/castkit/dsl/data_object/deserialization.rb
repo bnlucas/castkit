@@ -49,7 +49,7 @@ module Castkit
             next if value.nil? && attribute.optional?
 
             value = deserialize_attribute_value!(attribute, value)
-            instance_variable_set("@#{attribute.field}", value)
+            assign_attribute_value!(attribute, value)
           end
         end
 
@@ -113,6 +113,23 @@ module Castkit
           end
 
           nil
+        end
+
+        # Stores a deserialized value using Cattri's internal store when available.
+        #
+        # @param attribute [Castkit::Attribute]
+        # @param value [Object]
+        # @return [void]
+        def assign_attribute_value!(attribute, value)
+          if respond_to?(:cattri_variable_set, true)
+            cattri_variable_set(
+              attribute.field,
+              value,
+              final: attribute.options[:final]
+            )
+          else
+            instance_variable_set("@#{attribute.field}", value)
+          end
         end
 
         # Resolves root-wrapped and unwrapped data.

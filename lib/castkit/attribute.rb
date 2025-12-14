@@ -23,6 +23,11 @@ module Castkit
   # @see Castkit::DSL::Attribute::Validation
   class Attribute
     include Castkit::DSL::Attribute
+    include Cattri
+
+    cattri :field, nil, expose: :read, final: true
+    cattri :type, nil, expose: :read, final: true
+    cattri :options, nil, expose: :read, final: true
 
     class << self
       # Defines a reusable attribute definition via a DSL wrapper.
@@ -71,15 +76,6 @@ module Castkit
       end
     end
 
-    # @return [Symbol] the attribute name
-    attr_reader :field
-
-    # @return [Symbol, Class, Array] the declared or normalized type
-    attr_reader :type
-
-    # @return [Hash] full option hash, including merged defaults
-    attr_reader :options
-
     # Initializes a new attribute definition.
     #
     # @param field [Symbol] the attribute name
@@ -87,10 +83,13 @@ module Castkit
     # @param default [Object, Proc, nil] optional static or callable default
     # @param options [Hash] additional attribute options
     def initialize(field, type, default: nil, **options)
-      @field = field
-      @type = self.class.normalize_type(type)
+      super()
+
+      cattri_variable_set(:field, field, final: true)
+      cattri_variable_set(:type, self.class.normalize_type(type), final: true)
+
       @default = default
-      @options = populate_options(options)
+      cattri_variable_set(:options, populate_options(options), final: true)
 
       validate!
     end

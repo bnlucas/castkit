@@ -61,5 +61,10 @@ RSpec.describe Castkit::Core::Config do
       relaxed_class = klass.relaxed(warn_on_unknown: false)
       expect(relaxed_class.warn_on_unknown).to be(false)
     end
+
+    it "rebuilds validation rules via cattri-backed flags" do
+      relaxed_class = klass.relaxed
+      expect(relaxed_class.validation_rules).to include(:strict, :allow_unknown, :warn_on_unknown)
+    end
   end
 end

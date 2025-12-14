@@ -58,6 +58,22 @@ RSpec.describe Castkit::DSL::DataObject::Deserialization do
     end
   end
 
+  describe "#deserialize_attribute_value!" do
+    let(:instance) { klass.new }
+
+    it "uses default when value is nil" do
+      attribute = Castkit::Attribute.new(:foo, :string, required: false, default: -> { "fallback" })
+      expect(instance.send(:deserialize_attribute_value!, attribute, nil)).to eq("fallback")
+    end
+
+    it "raises when required and value is nil" do
+      attribute = Castkit::Attribute.new(:foo, :string, required: true)
+      expect do
+        instance.send(:deserialize_attribute_value!, attribute, nil)
+      end.to raise_error(Castkit::AttributeError)
+    end
+  end
+
   describe "#unwrap_prefixed_fields!" do
     let(:attribute) do
       double("Attribute",

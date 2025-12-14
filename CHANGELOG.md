@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+# v0.4.0
+
+- Refactored Castkit internals to build on Cattri registries for attributes, configuration, contracts, and attribute definitions
+- Added Cattri-powered introspection helpers, serialization toggle behavior and enhanced type/validator DSLs, plus coverage for the new plugin helpers
+
 ## [0.3.0] - 2025-04-16
 
 ### Added

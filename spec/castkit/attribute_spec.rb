@@ -4,6 +4,7 @@ require "spec_helper"
 require "castkit/attribute"
 require "castkit/data_object"
 require "castkit/validator"
+require "castkit/attributes/definition"
 
 RSpec.describe Castkit::Attribute do
   subject(:instance) { described_class.new(:foo, type, **options) }
@@ -62,6 +63,48 @@ RSpec.describe Castkit::Attribute do
       expect do
         described_class.new(:foo, Object.new)
       end.to raise_error(Castkit::AttributeError)
+    end
+
+    it "raises for symbol types that are not registered" do
+      expect do
+        described_class.new(:foo, :nope)
+      end.to raise_error(Castkit::AttributeError)
+    end
+  end
+
+  describe ".define" do
+    it "builds reusable definitions" do
+      definition = described_class.define(:string) { required false }
+      expect(definition[:type]).to eq(:string)
+      expect(definition[:options][:required]).to be(true)
+    end
+  end
+
+  describe "#raise_error!" do
+    it "raises a standardized attribute error" do
+      attribute = described_class.new(:foo, :string)
+      expect do
+        attribute.send(:raise_error!, "boom")
+      end.to raise_error(Castkit::AttributeError, /boom/)
+    end
+  end
+
+  describe "option helpers" do
+    let(:attribute) do
+      dataobject_type = Class.new(Castkit::DataObject)
+      described_class.new(:foo, dataobject_type, required: false, ignore_nil: true, ignore_blank: true,
+                                                 composite: true, transient: true, unwrapped: true, prefix: nil)
+    end
+
+    it "exposes option predicates from DSL::Attribute::Options" do
+      expect(attribute.required?).to be(false)
+      expect(attribute.optional?).to be(true)
+      expect(attribute.ignore_nil?).to be(true)
+      expect(attribute.ignore_blank?).to be(true)
+      expect(attribute.composite?).to be(true)
+      expect(attribute.transient?).to be(true)
+      expect(attribute.unwrapped?).to be(true)
+      expect(attribute.prefix).to be_nil
     end
   end
 end

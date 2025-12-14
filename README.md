@@ -60,14 +60,14 @@ Castkit comes with built-in support for primitive types and allows registration 
 
 ```ruby
 {
-        array: Castkit::Types::Collection,
-        boolean: Castkit::Types::Boolean,
-        date: Castkit::Types::Date,
-        datetime: Castkit::Types::DateTime,
-        float: Castkit::Types::Float,
-        hash: Castkit::Types::Base,
-        integer: Castkit::Types::Integer,
-        string: Castkit::Types::String
+    array: Castkit::Types::Collection,
+    boolean: Castkit::Types::Boolean,
+    date: Castkit::Types::Date,
+    datetime: Castkit::Types::DateTime,
+    float: Castkit::Types::Float,
+    hash: Castkit::Types::Base,
+    integer: Castkit::Types::Integer,
+    string: Castkit::Types::String
 }
 ```
 

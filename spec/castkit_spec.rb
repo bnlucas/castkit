@@ -8,6 +8,30 @@ RSpec.describe Castkit do
     expect(Castkit::VERSION).not_to be nil
   end
 
+  describe ".warning" do
+    it "emits warnings when enabled" do
+      Castkit.configuration.enable_warnings = true
+
+      expect { Castkit.warning("warn") }.to output(/warn/).to_stderr
+    ensure
+      Castkit.configuration.enable_warnings = false
+    end
+
+    it "provides type validator shortcut" do
+      validator = Castkit.type_validator(:string)
+      expect { validator.call("hi") }.not_to raise_error
+      expect(validator.call("hi")).to be_nil
+    end
+
+    it "exposes serializer and deserializer helpers" do
+      serializer = Castkit.type_serializer(:string)
+      deserializer = Castkit.type_deserializer(:string)
+
+      expect(serializer.call("x")).to eq("x")
+      expect(deserializer.call("y")).to eq("y")
+    end
+  end
+
   describe Castkit::DataObject do
     describe "with optional attributes" do
       let(:klass) do

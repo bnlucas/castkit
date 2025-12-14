@@ -86,7 +86,9 @@ module Castkit
       #
       # @param field [Symbol]
       # @param options [Hash]
-      def hash(field, **options)
+      def hash(field = nil, **options)
+        return super() if field.nil?
+
         attribute(field, :hash, **options)
       end
 

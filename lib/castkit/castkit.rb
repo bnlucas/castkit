@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "cattri"
 require_relative "core/attribute_types"
 
 # Castkit is a lightweight, type-safe data object system for Ruby.
