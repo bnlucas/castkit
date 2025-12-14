@@ -38,7 +38,10 @@ module Castkit
           # @param value [Boolean, nil]
           # @return [Boolean]
           def ignore_blank(value = nil)
-            @ignore_blank = value.nil? || value
+            return (@ignore_blank = true) if value.nil? && !defined?(@ignore_blank)
+            return @ignore_blank if value.nil?
+
+            @ignore_blank = value
           end
         end
 

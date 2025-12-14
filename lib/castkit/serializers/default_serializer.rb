@@ -11,13 +11,13 @@ module Castkit
     # and respects the class-level serialization configuration.
     class DefaultSerializer < Castkit::Serializers::Base
       # @return [Hash{Symbol => Castkit::Attribute}] the attributes to serialize
-      attr_reader :attributes
+      cattri :attributes, nil, expose: :read
 
       # @return [Hash{Symbol => Object}] unrecognized attributes captured during deserialization
-      attr_reader :unknown_attributes
+      cattri :unknown_attributes, nil, expose: :read
 
       # @return [Hash] serialization config flags like :root, :ignore_nil, :allow_unknown
-      attr_reader :options
+      cattri :options, nil, expose: :read
 
       # Serializes the object to a hash.
       #
@@ -41,13 +41,13 @@ module Castkit
         super
 
         @skip_flag = "__castkit_#{object.object_id}"
-        @attributes = object.class.attributes.freeze
-        @unknown_attributes = object.unknown_attributes.freeze
-        @options = {
-          root: object.class.root,
-          ignore_nil: object.class.ignore_nil || false,
-          allow_unknown: object.class.allow_unknown || false
-        }
+        cattri_variable_set(:attributes, object.class.attributes.freeze)
+        cattri_variable_set(:unknown_attributes, object.unknown_attributes.freeze)
+        cattri_variable_set(:options, {
+                              root: object.class.root,
+                              ignore_nil: object.class.ignore_nil || false,
+                              allow_unknown: object.class.allow_unknown || false
+                            })
       end
 
       # Serializes all defined attributes.

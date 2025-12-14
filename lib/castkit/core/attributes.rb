@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "cattri"
+
 module Castkit
   module Core
     # Provides DSL and implementation for declaring attributes within a Castkit::DataObject.
@@ -9,7 +11,11 @@ module Castkit
     #
     # This module is included into `Castkit::DataObject` and handles attribute registration,
     # accessor generation, and typed writing behavior.
-    module Attributes
+    module Attributes # rubocop:disable Metrics/ModuleLength
+      def self.extended(base)
+        base.include(Cattri)
+      end
+
       # Declares an attribute on the data object.
       #
       # Accepts either inline options or a reusable attribute definition (`using` or `definition`).
@@ -29,7 +35,7 @@ module Castkit
         type, options = use_definition(field, definition || using&.definition, type, options)
         return define_attribute(field, type, **options) unless options[:transient]
 
-        attr_accessor field
+        define_transient_accessor(field)
       end
 
       # Declares a composite (computed) attribute.
@@ -97,14 +103,14 @@ module Castkit
       #
       # @return [Hash{Symbol => Castkit::Attribute}]
       def attributes
-        @attributes ||= {}
+        cattri_variable_memoize(:__castkit_attributes_registry) { {} }
       end
 
       def inherited(subclass)
         super
 
-        parent_attributes = instance_variable_get(:@attributes)
-        subclass.instance_variable_set(:@attributes, parent_attributes.dup) if parent_attributes
+        parent_attributes = cattri_variable_get(:__castkit_attributes_registry)
+        subclass.cattri_variable_set(:__castkit_attributes_registry, parent_attributes.dup) if parent_attributes
       end
 
       # Alias for {#attribute}
@@ -152,31 +158,27 @@ module Castkit
         attribute = Castkit::Attribute.new(field, type, **options)
         attributes[field] = attribute
 
-        if attribute.full_access?
-          attr_reader field
-
-          define_typed_writer(field, attribute)
-        elsif attribute.writeable?
-          define_typed_writer(field, attribute)
-        elsif attribute.readable?
-          attr_reader field
-        end
+        define_accessors(attribute)
       end
 
-      # Defines a writer method that enforces type coercion.
+      # Creates readers/writers for a defined attribute using Cattri.
       #
-      # @param field [Symbol]
       # @param attribute [Castkit::Attribute]
       # @return [void]
-      def define_typed_writer(field, attribute)
-        define_method("#{field}=") do |value|
-          deserialized_value = Castkit.type_caster(attribute.type.to_sym).call(
-            value,
-            options: attribute.options,
-            context: attribute.field
-          )
+      def define_accessors(attribute)
+        expose = exposure_for(attribute)
+        return if expose == :none
 
-          instance_variable_set("@#{field}", deserialized_value)
+        if attribute.writeable?
+          cattri(attribute.field, nil, expose: expose) do |value|
+            Castkit.type_caster(attribute.type.to_sym).call(
+              value,
+              options: attribute.options,
+              context: attribute.field
+            )
+          end
+        else
+          cattri(attribute.field, nil, expose: expose)
         end
       end
 
@@ -189,6 +191,7 @@ module Castkit
       def with_access(access, options = {}, &block)
         @__access_context = access
         @__block_options = options
+
         instance_eval(&block)
       ensure
         @__access_context = nil
@@ -204,6 +207,7 @@ module Castkit
       def with_required(flag, options = {}, &block)
         @__required_context = flag
         @__block_options = options
+
         instance_eval(&block)
       ensure
         @__required_context = nil
@@ -221,6 +225,26 @@ module Castkit
         base = base.merge(transient: true) if @__transient_context
 
         base.merge(options)
+      end
+
+      # Maps Castkit access flags onto Cattri's expose option.
+      #
+      # @param attribute [Castkit::Attribute]
+      # @return [Symbol]
+      def exposure_for(attribute)
+        return :read_write if attribute.full_access?
+        return :write if attribute.writeable?
+        return :read if attribute.readable?
+
+        :none
+      end
+
+      # Defines read/write accessors for transient attributes.
+      #
+      # @param field [Symbol]
+      # @return [void]
+      def define_transient_accessor(field)
+        cattri(field, nil, expose: :read_write)
       end
     end
   end

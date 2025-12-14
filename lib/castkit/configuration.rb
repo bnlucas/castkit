@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "types"
+require "cattri"
 
 module Castkit
   # Configuration container for global Castkit settings.
@@ -8,6 +9,8 @@ module Castkit
   # This includes type registration, validation, and enforcement flags
   # used throughout Castkit's attribute system.
   class Configuration
+    include Cattri
+
     # Default mapping of primitive type definitions.
     #
     # @return [Hash{Symbol => Castkit::Types::Base}]
@@ -36,56 +39,30 @@ module Castkit
       uuid: :string
     }.freeze
 
-    # @return [Hash{Symbol => Castkit::Types::Base}] registered types
-    attr_reader :types
-
-    # Set default plugins that will be used globally in all Castkit::DataObject subclasses.
-    # This is equivalent to calling `enable_plugins` in every class.
-    #
-    # @return [Array<Symbol>] default plugin names to be applied to all DataObject subclasses
-    attr_accessor :default_plugins
-
-    # Whether to raise an error if values should be validated before deserializing, e.g. true -> "true"
-    # @return [Boolean]
-    attr_accessor :enforce_typing
-
-    # Whether to raise an error if access mode is not recognized.
-    # @return [Boolean]
-    attr_accessor :enforce_attribute_access
-
-    # Whether to raise an error if a prefix is defined without `unwrapped: true`.
-    # @return [Boolean]
-    attr_accessor :enforce_unwrapped_prefix
-
-    # Whether to raise an error if an array attribute is missing the `of:` type.
-    # @return [Boolean]
-    attr_accessor :enforce_array_options
-
-    # Whether to raise an error for unknown and invalid type definitions.
-    # @return [Boolean]
-    attr_accessor :raise_type_errors
-
-    # Whether to emit warnings when Castkit detects misconfigurations.
-    # @return [Boolean]
-    attr_accessor :enable_warnings
-
-    # Whether the strict flag is enabled by default for all DataObjects and Contracts.
-    # @return [Boolean]
-    attr_accessor :strict_by_default
+    cattri :types, -> { DEFAULT_TYPES.dup }, expose: :read_write
+    cattri :default_plugins, [], expose: :read_write
+    cattri :enforce_typing, true, expose: :read_write
+    cattri :enforce_attribute_access, true, expose: :read_write
+    cattri :enforce_unwrapped_prefix, true, expose: :read_write
+    cattri :enforce_array_options, true, expose: :read_write
+    cattri :raise_type_errors, true, expose: :read_write
+    cattri :enable_warnings, true, expose: :read_write
+    cattri :strict_by_default, true, expose: :read_write
 
     # Initializes the configuration with default types and enforcement flags.
     #
     # @return [void]
     def initialize
-      @types = DEFAULT_TYPES.dup
-      @enforce_typing = true
-      @enforce_attribute_access = true
-      @enforce_unwrapped_prefix = true
-      @enforce_array_options = true
-      @raise_type_errors = true
-      @enable_warnings = true
-      @strict_by_default = true
-      @default_plugins = []
+      super
+      self.types = DEFAULT_TYPES.dup
+      self.enforce_typing = true
+      self.enforce_attribute_access = true
+      self.enforce_unwrapped_prefix = true
+      self.enforce_array_options = true
+      self.raise_type_errors = true
+      self.enable_warnings = true
+      self.strict_by_default = true
+      self.default_plugins = []
 
       apply_type_aliases!
     end
@@ -136,7 +113,7 @@ module Castkit
     # @return [Castkit::Types::Base]
     # @raise [Castkit::TypeError] if the type is not registered
     def fetch_type(type)
-      @types.fetch(type.to_sym) do
+      types.fetch(type.to_sym) do
         raise Castkit::TypeError, "Unknown type `#{type.inspect}`" if raise_type_errors
       end
     end
@@ -146,14 +123,14 @@ module Castkit
     # @param type [Symbol]
     # @return [Boolean]
     def type_registered?(type)
-      @types.key?(type.to_sym)
+      types.key?(type.to_sym)
     end
 
     # Restores the type registry to its default state.
     #
     # @return [void]
     def reset_types!
-      @types = DEFAULT_TYPES.dup
+      self.types = DEFAULT_TYPES.dup
       apply_type_aliases!
     end
 

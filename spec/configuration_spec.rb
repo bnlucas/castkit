@@ -23,6 +23,18 @@ RSpec.describe Castkit::Configuration do
       expect(config.fetch_type(:integer)).to be_a(Castkit::Types::Integer)
       expect(config.fetch_type(:float)).to be_a(Castkit::Types::Float)
     end
+
+    it "raises when type is unknown and raise_type_errors is true" do
+      config.raise_type_errors = true
+
+      expect { config.fetch_type(:missing_type) }.to raise_error(Castkit::TypeError)
+    end
+
+    it "returns nil when type is unknown and raise_type_errors is false" do
+      config.raise_type_errors = false
+
+      expect(config.fetch_type(:missing_type)).to be_nil
+    end
   end
 
   describe "#register_type" do
@@ -31,6 +43,11 @@ RSpec.describe Castkit::Configuration do
     it "registers a new validator for a type" do
       config.register_type(:custom, mock_definition)
       expect(config.fetch_type(:custom)).to be_a(mock_definition)
+    end
+
+    it "registers aliases when provided" do
+      config.register_type(:primary, mock_definition, aliases: [:alias_one])
+      expect(config.fetch_type(:alias_one)).to be_a(mock_definition)
     end
 
     it "does not override existing validator by default" do

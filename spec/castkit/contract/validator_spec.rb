@@ -79,5 +79,36 @@ RSpec.describe Castkit::Contract::Validator do
         expect(result[:items][0]).to include(:name)
       end
     end
+
+    context "with aliases defined" do
+      let(:attribute) { Castkit::Attribute.new(:id, :string, aliases: [:identifier]) }
+      let(:attributes) { [attribute] }
+      let(:input) { { identifier: "abc" } }
+      let(:options) { {} }
+
+      it "treats alias keys as known attributes" do
+        expect(result).to eq({})
+      end
+    end
+
+    context "with strict and allow_unknown both true" do
+      let(:input) { { id: "abc", extra: 1 } }
+      let(:options) { { strict: true, allow_unknown: true, warn_on_unknown: false } }
+
+      it "logs a warning and does not raise on unknown keys" do
+        expect(Castkit).to receive(:warning).with(/Both `strict` and `allow_unknown`/).and_call_original
+        expect { described_class.call!(attributes, input, **options) }.not_to raise_error
+      end
+    end
+
+    context "with warn_on_unknown enabled and strict off" do
+      let(:input) { { id: "abc", extra: 1 } }
+      let(:options) { { strict: false, warn_on_unknown: true, allow_unknown: false } }
+
+      it "warns instead of raising on unknown keys" do
+        expect(Castkit).to receive(:warning).with(/Unknown attribute/).and_call_original
+        expect { described_class.call!(attributes, input, **options) }.not_to raise_error
+      end
+    end
   end
 end

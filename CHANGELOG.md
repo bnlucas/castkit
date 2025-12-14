@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+# v0.4.0
+
+- refactored Castkit internals to build on Cattri registries for attributes, configuration, contracts, and attribute definitions
+- added Cattri-powered introspection helpers, serialization toggle behavior and enhanced type/validator DSLs, plus coverage for the new plugin helpers
+- introduced SimpleCov HTML/Cobertura reporting, raised the minimum coverage target to 100%, and grated 100% line coverage across the core library (Ruby 3.1 limits still block rspec via SimpleCov/json incompatibility)
 ## [0.3.0] - 2025-04-16
 
 ### Added

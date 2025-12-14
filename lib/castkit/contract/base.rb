@@ -38,6 +38,8 @@ module Castkit
       ].freeze
 
       class << self
+        include Cattri
+
         # Defines an attribute for the contract.
         #
         # Only a subset of options is allowed inside a contract.
@@ -71,15 +73,9 @@ module Castkit
           Castkit::Contract::Result.new(definition[:name].to_s, input)
         end
 
-        # Returns internal contract metadata.
-        #
-        # @return [Hash]
-        def definition
-          @definition ||= {
-            name: :ephemeral,
-            attributes: {}
-          }
-        end
+        cattri :definition,
+               -> { { name: :ephemeral, attributes: {} } },
+               scope: :class, expose: :read_write
 
         # Returns the defined attributes.
         #
@@ -117,8 +113,8 @@ module Castkit
         def define_from_source(name, source)
           source_attributes = source.attributes.dup
 
-          @definition = {
-            name: name,
+          self.definition = {
+            name: name.to_sym,
             attributes: source_attributes.transform_values do |attr|
               Castkit::Attribute.new(attr.field, attr.type, **attr.options.slice(*ATTRIBUTE_OPTIONS))
             end
@@ -131,7 +127,8 @@ module Castkit
         # @yield [block]
         # @return [void]
         def define_from_block(name, &block)
-          definition[:name] = name
+          contract_name = name ? name.to_sym : :ephemeral
+          self.definition = { name: contract_name, attributes: {} }
 
           @__castkit_contract_dsl = true
           instance_eval(&block)

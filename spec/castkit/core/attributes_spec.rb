@@ -103,4 +103,42 @@ RSpec.describe Castkit::Core::Attributes do
       expect(instance.thing).to eq("alias_works")
     end
   end
+
+  describe "attribute registry inheritance" do
+    it "copies defined attributes to subclasses via Cattri registry" do
+      klass.attribute :base_field, :string
+
+      subclass = Class.new(klass)
+
+      expect(subclass.attributes.keys).to include(:base_field)
+      expect(subclass.new).to respond_to(:base_field)
+    end
+
+    it "initializes an empty registry when parent has none" do
+      subclass = Class.new(klass)
+
+      expect(subclass.attributes).to eq({})
+    end
+  end
+
+  describe "#exposure_for" do
+    it "returns :none when attribute is neither readable nor writeable" do
+      attribute = Castkit::Attribute.new(:secret, :string, access: [:write], composite: true)
+      exposure = klass.send(:exposure_for, attribute)
+      expect(exposure).to eq(:none)
+    end
+
+    it "raises when type mismatches a provided definition" do
+      definition = { type: :string, options: {} }
+      expect do
+        klass.send(:use_definition, :field, definition, :integer, {})
+      end.to raise_error(Castkit::AttributeError, /type mismatch/)
+    end
+
+    it "raises when type is missing" do
+      expect do
+        klass.send(:use_definition, :field, nil, nil, {})
+      end.to raise_error(Castkit::AttributeError, /has no type/)
+    end
+  end
 end

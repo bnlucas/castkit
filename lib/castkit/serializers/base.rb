@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "set"
+require "cattri"
 
 module Castkit
   module Serializers
@@ -21,6 +22,8 @@ module Castkit
     #
     #   CustomSerializer.call(user_dto)
     class Base
+      include Cattri
+
       class << self
         # Entrypoint for serializing an object.
         #
@@ -33,7 +36,7 @@ module Castkit
       end
 
       # @return [Castkit::DataObject] the object being serialized
-      attr_reader :object
+      cattri :object, nil, expose: :read
 
       protected
 
@@ -47,15 +50,17 @@ module Castkit
       private
 
       # @return [Set<Integer>] a set of visited object IDs to detect circular references
-      attr_reader :visited
+      cattri :visited, nil, expose: :read
 
       # Initializes the serializer instance.
       #
       # @param object [Castkit::DataObject]
       # @param visited [Set, nil]
       def initialize(object, visited: nil)
-        @object = object
-        @visited = visited || Set.new
+        super()
+
+        cattri_variable_set(:object, object)
+        cattri_variable_set(:visited, visited || Set.new)
       end
 
       # Subclasses must override this method to implement serialization logic.

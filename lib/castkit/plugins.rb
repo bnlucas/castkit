@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "cattri"
+
 module Castkit
   # Internal registry for Castkit plugin modules.
   #
@@ -19,9 +21,16 @@ module Castkit
   #     enable_plugins :custom, :oj
   #   end
   module Plugins
-    @registered_plugins = {}
+    include Cattri
 
     class << self
+      include Cattri
+      extend Cattri::Dsl
+      extend Cattri::ClassMethods
+      extend Cattri::Visibility
+
+      cattri :registered_plugins, {}, expose: :read_write
+
       # Activates one or more plugins on the given class.
       #
       # Each plugin module is included into the class. If the module responds to `setup!`,
@@ -58,7 +67,7 @@ module Castkit
       # @return [Module] the plugin module
       # @raise [Castkit::Error] if no plugin is found
       def lookup!(name)
-        @registered_plugins[name.to_sym] ||
+        registered_plugins[name.to_sym] ||
           const_get(Castkit::Inflector.pascalize(name.to_s), false)
       rescue NameError
         raise Castkit::Error,
@@ -75,7 +84,7 @@ module Castkit
       # @param plugin [Module] the plugin module to register
       # @return [void]
       def register(name, plugin)
-        @registered_plugins[name] = plugin
+        registered_plugins[name.to_sym] = plugin
       end
     end
   end

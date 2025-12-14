@@ -61,6 +61,20 @@ RSpec.describe Castkit::Serializers::DefaultSerializer do
       serializer = described_class.new(obj)
       expect(serializer.call).to eq({ name: "Tester", unknown: "key" })
     end
+
+    it "serializes dataobject collections" do
+      child_class = Class.new(Castkit::DataObject) do
+        string :value
+      end
+
+      parent_class = Class.new(Castkit::DataObject) do
+        array :children, of: child_class
+      end
+
+      parent = parent_class.new(children: [{ value: "x" }])
+      serialized = described_class.call(parent)
+      expect(serialized[:children]).to eq([{ value: "x" }])
+    end
   end
 
   describe "#serialize_attributes" do

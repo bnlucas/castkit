@@ -76,20 +76,23 @@ module Castkit
     end
 
     # @return [Hash{Symbol => Object}] The raw data provided during instantiation.
-    attr_reader :__raw
+    cattri :__raw, nil, expose: :read
 
     # @return [Hash{Symbol => Object}] Undefined attributes provided during instantiation.
-    attr_reader :unknown_attributes
+    cattri :unknown_attributes, nil, expose: :read
 
     # Initializes the DTO from a hash of attributes.
     #
     # @param data [Hash] raw input hash
     # @raise [Castkit::DataObjectError] if strict mode is enabled and unknown keys are present
     def initialize(data = {})
-      @__raw = data.dup.freeze
+      super()
+
+      cattri_variable_set(:__raw, data.dup.freeze)
       data = unwrap_root(data)
 
-      @unknown_attributes = data.reject { |key, _| self.class.attributes.key?(key.to_sym) }.freeze
+      cattri_variable_set(:unknown_attributes,
+                          data.reject { |key, _| self.class.attributes.key?(key.to_sym) }.freeze)
 
       validate_data!(data)
       deserialize_attributes!(data)

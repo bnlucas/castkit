@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "castkit"
 require_relative "simplecov_helper"
+require "castkit"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

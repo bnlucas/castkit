@@ -7,6 +7,7 @@ require_relative "data_object/contract"
 require_relative "data_object/plugins"
 require_relative "data_object/serialization"
 require_relative "data_object/deserialization"
+require_relative "data_object/introspection"
 
 module Castkit
   module DSL
@@ -47,11 +48,14 @@ module Castkit
       # @param base [Class] the including class
       # @return [void]
       def self.included(base)
+        base.include(Cattri)
+
         base.extend(Castkit::Core::Config)
         base.extend(Castkit::Core::Attributes)
         base.extend(Castkit::Core::AttributeTypes)
         base.extend(Castkit::DSL::DataObject::Contract)
         base.extend(Castkit::DSL::DataObject::Plugins)
+        base.extend(Castkit::DSL::DataObject::Introspection)
 
         base.include(Castkit::DSL::DataObject::Serialization)
         base.include(Castkit::DSL::DataObject::Deserialization)
