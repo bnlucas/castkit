@@ -12,9 +12,9 @@ SimpleCov.formatters = [
 SimpleCov.start do
   enable_coverage :branch
 
-  track_files "lib/cattri/**/*.rb"
+  track_files "lib/castkit/**/*.rb"
 
-  add_filter "lib/cattri/version.rb"
+  add_filter "lib/castkit/version.rb"
   add_filter "/spec/"
 
   add_group "DataObjects", "lib/castkit/data_object"

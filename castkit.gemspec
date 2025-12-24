@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Runtime dependencies
-  spec.add_dependency "cattri", ">=0.2.3"
+  spec.add_dependency "cattri", ">=0.2.4"
   spec.add_dependency "thor"
 
   # Development dependencies
