@@ -294,6 +294,65 @@ RSpec.describe Castkit::DataObject do
     end
   end
 
+  describe "optional attributes with defaults" do
+    let(:dto_with_defaults) do
+      Class.new(described_class) do
+        string :name
+        string :role, required: false, default: "guest"
+        integer :count, required: false, default: 0
+      end
+    end
+
+    let(:dto_with_optional_block) do
+      Class.new(described_class) do
+        string :name
+
+        optional do
+          string :role, default: "guest"
+          integer :count, default: 0
+        end
+      end
+    end
+
+    let(:dto_without_defaults) do
+      Class.new(described_class) do
+        string :name
+        string :role, required: false
+        integer :count, required: false
+      end
+    end
+
+    it "applies defaults when optional attributes are omitted" do
+      instance = dto_with_defaults.new(name: "Alice")
+      expect(instance.role).to eq("guest")
+      expect(instance.count).to eq(0)
+    end
+
+    it "uses provided value when explicitly given" do
+      instance = dto_with_defaults.new(name: "Alice", role: "admin", count: 5)
+      expect(instance.role).to eq("admin")
+      expect(instance.count).to eq(5)
+    end
+
+    it "returns nil for optional attributes without defaults when omitted" do
+      instance = dto_without_defaults.new(name: "Alice")
+      expect(instance.role).to be_nil
+      expect(instance.count).to be_nil
+    end
+
+    it "applies defaults inside optional block when attributes are omitted" do
+      instance = dto_with_optional_block.new(name: "Alice")
+      expect(instance.role).to eq("guest")
+      expect(instance.count).to eq(0)
+    end
+
+    it "uses provided values inside optional block when explicitly given" do
+      instance = dto_with_optional_block.new(name: "Alice", role: "admin", count: 5)
+      expect(instance.role).to eq("admin")
+      expect(instance.count).to eq(5)
+    end
+  end
+
   describe "deserialization failures" do
     it "raises when value cannot be cast to any union type" do
       failing_type = Class.new(Castkit::Types::Base) do

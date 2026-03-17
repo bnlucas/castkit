@@ -46,7 +46,7 @@ module Castkit
             next if attribute.skip_deserialization?
 
             value = resolve_input_value(input, attribute)
-            next if value.nil? && attribute.optional?
+            next if value.nil? && attribute.optional? && attribute.default.nil?
 
             value = deserialize_attribute_value!(attribute, value)
             assign_attribute_value!(attribute, value)
